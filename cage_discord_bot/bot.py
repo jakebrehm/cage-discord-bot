@@ -1,4 +1,9 @@
 import asyncio
+import json
+import os
+import pathlib
+import random
+
 import discord
 from discord.ext import commands
 
@@ -15,10 +20,6 @@ async def on_member_join(member):
 @client.event
 async def on_member_remove(member):
     print(f'{member} has left the server.')
-
-@client.command()
-async def ping(context):
-    await context.send("Don't worry, I'm here.")
 
 @client.command()
 async def clear(context, amount=5):
@@ -46,6 +47,19 @@ async def unban(context, *, member):
             await context.send(f"Unbanned {user.mention}.")
             return
 
+@client.command()
+async def ping(context):
+    await context.send("Don't worry, I'm here.")
+
+@client.command(aliases=['fact', 'fun-fact'])
+async def funfact(context):
+    PROJECT_DIRECTORY = pathlib.Path(__file__).parent.parent
+    DATA_FOLDER = os.path.join(PROJECT_DIRECTORY, 'data')
+    FUN_FACTS = os.path.join(DATA_FOLDER, 'facts.json')
+    with open(FUN_FACTS, 'r') as json_file:
+        facts = json.load(json_file)
+    await context.send(random.choice(facts))
+
 @client.event
 async def on_message(message):
     deformatted = message.content.lower().replace(' ', '')
@@ -54,14 +68,14 @@ async def on_message(message):
         await message.channel.send(f"That's ridiculous, {name}. Goodbye.")
         await asyncio.sleep(2)
         await message.author.kick(reason=f"{name} was being absurd.")
+        await asyncio.sleep(1)
+        await message.channel.send("That was ugly. I'm sorry, everyone.")
     await client.process_commands(message)
 
 
 if __name__ == '__main__':
 
     import configparser
-    import os
-    import pathlib
 
     # Use pathlib and os to get the path of the project folder
     PROJECT_DIRECTORY = pathlib.Path(__file__).parent.parent
