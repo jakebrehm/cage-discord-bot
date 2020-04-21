@@ -27,6 +27,16 @@ async def ping(context):
     await context.send("Don't worry, I'm here.")
 
 @client.event
+async def on_command_error(context, error):
+    name = context.message.author.name
+    if isinstance(error, commands.CommandNotFound):
+        await context.send(f"I'm not sure what you're asking me to do, {name}.")
+    elif isinstance(error, commands.MissingPermissions):
+        await context.send(f"Sorry {name}, I can't let you do that.")
+    else:
+        print(error)
+
+@client.event
 async def on_message(message):
     deformatted = message.content.lower().replace(' ', '')
     name, discriminator = message.author.name, message.author.discriminator
