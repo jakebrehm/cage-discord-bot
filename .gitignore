@@ -132,9 +132,5 @@ dmypy.json
 .vscode/
 *.code-workspace
 
-# Poetry files
-poetry.lock
-pyproject.toml
-
 # Project-specific
 *.ini
