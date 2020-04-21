@@ -37,4 +37,4 @@ if __name__ == '__main__':
 
     # Save the dictionary as a json file
     with open(JSON_FILE, 'w') as json_file:
-        json.dump(data, json_file)
+        json.dump(data, json_file, indent=4)
