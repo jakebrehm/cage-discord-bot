@@ -4,18 +4,19 @@ import os
 import random
 from discord.ext import commands
 
+import database as db
+
 
 class Information(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-        self.FUN_FACTS = os.path.join('..', 'data', 'facts.json')
+        self.DATABASE_LOCATION = os.path.join('..', 'data', 'data.db')
 
     @commands.command(aliases=['fact', 'fun-fact'])
     async def funfact(self, context):
-        with open(self.FUN_FACTS, 'r') as json_file:
-            facts = json.load(json_file)
-        await context.send(random.choice(facts))
+        database = db.Database(self.DATABASE_LOCATION)
+        await context.send(database.random_fact)
 
 
 def setup(client):

@@ -13,17 +13,20 @@ class Contribute(commands.Cog):
 
     @commands.command(aliases=['remind'])
     async def submit(self, context, which, *, submission):
+        guild_id = context.guild.id
+        author_name = context.author.name
+        author_id = context.author.id
         if which in ['fact', 'fun-fact']:
             database = db.Database(self.DATABASE_LOCATION)
-            database.submit_fact(context.guild.id, context.author.id, 'accepted', submission)
+            database.submit_fact(guild_id, author_id, 'accepted', submission)
             database.terminate()
             await context.send(
-                f"Thanks for reminding me, {context.author.name}. "
+                f"Thanks for reminding me, {author_name}. "
                 f"I can't believe I forgot."
             )
         else:
             await context.send(
-                f"What are you trying to remind me of, {context.author.name}? "
+                f"What are you trying to remind me of, {author_name}? "
                 f"I don't understand."
             )
 

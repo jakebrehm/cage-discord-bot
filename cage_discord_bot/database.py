@@ -33,10 +33,30 @@ class Database:
         self.connection.commit()
         self.connection.close()
 
+    def get_fact(self):
+        self.cursor.execute(
+            """SELECT fact FROM facts WHERE status="accepted"
+               ORDER BY RANDOM() LIMIT 1"""
+        )
+        fact = self.cursor.fetchall()[0][0]
+        if fact:
+            return fact
+        else:
+            return "I don't know much about myself, apparently."
+
     def submit_fact(self, server, author, status, fact):
         date = datetime.utcnow().date().strftime(r'%Y-%m-%d')
         time = datetime.utcnow().time().strftime(r'%H:%M%:%S')
-        self.cursor.execute("""INSERT INTO facts (server, date, time, author, status, fact)
-                            VALUES (?, ?, ?, ?, ?, ?)""",
-                        (server, date, time, author, status, fact))
+        self.cursor.execute(
+            """INSERT INTO facts (server, date, time, author, status, fact)
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            (server, date, time, author, status, fact),
+        )
         return self.connection, self.cursor
+
+    @property
+    def random_fact(self):
+        self.connect()
+        fact = self.get_fact()
+        self.terminate()
+        return fact
