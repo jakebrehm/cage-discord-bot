@@ -10,8 +10,6 @@ class Database:
 
         self.path = path
 
-        self.connect()
-
     def connect(self):
 
         self.connection = sqlite3.connect(self.path)
@@ -33,18 +31,30 @@ class Database:
         self.connection.commit()
         self.connection.close()
 
-    def get_fact(self):
+    def get_approved_fact(self):
         self.cursor.execute(
             """SELECT fact FROM facts WHERE status="accepted"
                ORDER BY RANDOM() LIMIT 1"""
         )
-        fact = self.cursor.fetchall()[0][0]
+        fact = self.cursor.fetchall()
         if fact:
-            return fact
+            return fact[0][0]
         else:
             return "I don't know much about myself, apparently."
 
+    def get_pending_fact(self):
+        self.cursor.execute(
+            """SELECT fact FROM facts WHERE status="pending"
+               ORDER BY date, time LIMIT 1"""
+        )
+        fact = self.cursor.fetchall()
+        if fact:
+            return fact[0][0]
+        else:
+            return "No pending facts. Apparently I'm not very interesting."
+
     def submit_fact(self, server, author, status, fact):
+        self.connect()
         date = datetime.utcnow().date().strftime(r'%Y-%m-%d')
         time = datetime.utcnow().time().strftime(r'%H:%M%:%S')
         self.cursor.execute(
@@ -57,6 +67,13 @@ class Database:
     @property
     def random_fact(self):
         self.connect()
-        fact = self.get_fact()
+        fact = self.get_approved_fact()
+        self.terminate()
+        return fact
+
+    @property
+    def pending_fact(self):
+        self.connect()
+        fact = self.get_pending_fact()
         self.terminate()
         return fact

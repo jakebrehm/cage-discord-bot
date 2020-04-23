@@ -43,6 +43,15 @@ class Moderation(commands.Cog):
                 await context.send(f"Unbanned {user.mention}.")
                 return
 
+    @commands.command(aliases=['approve'])
+    @commands.has_permissions(ban_members=True)
+    async def verify(self, context, which):
+        if which == 'fact':
+            database = self.client.database
+            fact = database.pending_fact
+            await context.send("I'm not sure about this fact:")
+            await context.send(fact)
+
 
 def setup(client):
     client.add_cog(Moderation(client))
