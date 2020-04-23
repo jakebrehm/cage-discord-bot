@@ -2,14 +2,14 @@ import discord
 import os
 from discord.ext import commands
 
-import database as db
+# import database as db
 
 
 class Contribute(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-        self.DATABASE_LOCATION = os.path.join('..', 'data', 'data.db')
+        # self.DATABASE_LOCATION = os.path.join('..', 'data', 'data.db')
 
     @commands.command(aliases=['remind'])
     async def submit(self, context, which, *, submission):
@@ -17,7 +17,8 @@ class Contribute(commands.Cog):
         author_name = context.author.name
         author_id = context.author.id
         if which in ['fact', 'fun-fact']:
-            database = db.Database(self.DATABASE_LOCATION)
+            # database = db.Database(self.DATABASE_LOCATION)
+            database = self.client.database
             database.submit_fact(guild_id, author_id, 'accepted', submission)
             database.terminate()
             await context.send(
