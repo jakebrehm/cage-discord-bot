@@ -1,3 +1,5 @@
+import asyncio
+
 import discord
 from discord.ext import commands
 
@@ -43,14 +45,59 @@ class Moderation(commands.Cog):
                 await context.send(f"Unbanned {user.mention}.")
                 return
 
-    @commands.command(aliases=['approve'])
+    @commands.command(aliases=['verify', 'approve', 'reject'])
     @commands.has_permissions(ban_members=True)
-    async def verify(self, context, which):
+    async def judge(self, context, which):
         if which == 'fact':
             database = self.client.database
             fact = database.pending_fact
-            await context.send("I'm not sure about this fact:")
-            await context.send(fact)
+
+            if not fact:
+                await context.send(
+                    "No pending facts. Apparently I'm not very interesting."
+                )
+                return
+
+            message = await context.send(
+                f"Maybe you can help me. I'm not sure about this fact:\n\n"
+
+                f"> {fact}\n\n"
+
+                "React to this message with a 👍 to approve, a "
+                "👎 to reject, or a 🤷‍♂️ to abstain."
+            )
+            await message.add_reaction('👍')
+            await message.add_reaction('👎')
+            await message.add_reaction('🤷‍♂️')
+
+            author_name = context.author.name
+
+            def check(reaction, user):
+                correct_user = user == context.author
+                valid_emoji = str(reaction.emoji) in ['👍', '👎', '🤷‍♂️']
+                return correct_user and valid_emoji
+
+            try:
+                reaction, user = await self.client.wait_for(
+                    'reaction_add',
+                    timeout=10,
+                    check=check,
+                )
+            except asyncio.TimeoutError:
+                await context.send(f'Sorry {author_name}, you were too slow.')
+            else:
+                if reaction.emoji == '🤷‍♂️':
+                    await context.send('Another time, then...')
+                elif reaction.emoji == '👍':
+                    await context.send(
+                        f'Thanks for accepting the submission, {author_name}.'
+                    )
+                    database.judge_fact(fact, 'accepted')
+                elif reaction.emoji == '👎':
+                    await context.send(
+                        f'The submission has been rejected.'
+                    )
+                    database.judge_fact(fact, 'rejected')
 
 
 def setup(client):

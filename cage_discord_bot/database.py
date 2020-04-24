@@ -48,10 +48,7 @@ class Database:
                ORDER BY date, time LIMIT 1"""
         )
         fact = self.cursor.fetchall()
-        if fact:
-            return fact[0][0]
-        else:
-            return "No pending facts. Apparently I'm not very interesting."
+        return fact[0][0] if fact else None
 
     def submit_fact(self, server, author, status, fact):
         self.connect()
@@ -63,6 +60,14 @@ class Database:
             (server, date, time, author, status, fact),
         )
         return self.connection, self.cursor
+
+    def judge_fact(self, fact, status):
+        self.connect()
+        self.cursor.execute(
+            """UPDATE facts SET status=? WHERE fact=? AND status=?""",
+            (status, fact, 'pending'),
+        )
+        self.terminate()
 
     @property
     def random_fact(self):
