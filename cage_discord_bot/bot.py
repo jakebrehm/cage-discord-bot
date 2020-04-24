@@ -55,6 +55,8 @@ class Client(commands.Bot):
             await message.author.kick(reason=f"{name} was being absurd.")
             await asyncio.sleep(1)
             await message.channel.send("That was ugly. I'm sorry, everyone.")
+        if all(s in deformatted for s in ['love', 'nic', 'cage']):
+            await message.add_reaction('❤')
         await client.process_commands(message)
 
 
