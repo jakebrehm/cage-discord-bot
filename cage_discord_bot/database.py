@@ -16,7 +16,8 @@ class Database:
         self.cursor = self.connection.cursor()
 
         self.cursor.execute(
-            """CREATE TABLE IF NOT EXISTS facts (
+            """
+            CREATE TABLE IF NOT EXISTS facts (
                 id INTEGER PRIMARY KEY,
                 server INTEGER,
                 date TEXT,
@@ -24,7 +25,8 @@ class Database:
                 author INTEGER,
                 status TEXT,
                 fact TEXT
-            )"""
+            )
+            """
         )
 
     def terminate(self):
@@ -33,8 +35,10 @@ class Database:
 
     def get_approved_fact(self):
         self.cursor.execute(
-            """SELECT fact FROM facts WHERE status="accepted"
-               ORDER BY RANDOM() LIMIT 1"""
+            """
+            SELECT fact FROM facts WHERE status="accepted"
+            ORDER BY RANDOM() LIMIT 1
+            """
         )
         fact = self.cursor.fetchall()
         if fact:
@@ -44,8 +48,10 @@ class Database:
 
     def get_pending_fact(self):
         self.cursor.execute(
-            """SELECT fact FROM facts WHERE status="pending"
-               ORDER BY date, time LIMIT 1"""
+            """
+            SELECT fact FROM facts WHERE status="pending"
+            ORDER BY date, time LIMIT 1
+            """
         )
         fact = self.cursor.fetchall()
         return fact[0][0] if fact else None
@@ -55,8 +61,10 @@ class Database:
         date = datetime.utcnow().date().strftime(r'%Y-%m-%d')
         time = datetime.utcnow().time().strftime(r'%H:%M%:%S')
         self.cursor.execute(
-            """INSERT INTO facts (server, date, time, author, status, fact)
-               VALUES (?, ?, ?, ?, ?, ?)""",
+            """
+            INSERT INTO facts (server, date, time, author, status, fact)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
             (server, date, time, author, status, fact),
         )
         return self.connection, self.cursor
@@ -68,6 +76,22 @@ class Database:
             (status, fact, 'pending'),
         )
         self.terminate()
+
+    def get_dialogue(self, description_id):
+        self.connect()
+        self.cursor.execute(
+            """
+            SELECT message FROM dialogue WHERE description_id=?
+            ORDER BY RANDOM() LIMIT 1
+            """,
+            (description_id,),
+        )
+        dialogue = self.cursor.fetchall()
+        self.terminate()
+        return dialogue[0][0] if dialogue else None
+
+    def __getitem__(self, value):
+        return self.get_dialogue(value)
 
     @property
     def random_fact(self):

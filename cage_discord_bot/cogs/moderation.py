@@ -23,14 +23,16 @@ class Moderation(commands.Cog):
     @commands.command()
     @commands.has_permissions(kick_members=True)
     async def kick(self, context, member : discord.Member, *, reason=None):
+        mention = member.mention
         await member.kick(reason=reason)
-        await context.send(f"Kicked {member.mention}.")
+        await context.send(self.client.database[6].format(name=mention))
 
     @commands.command()
     @commands.has_permissions(ban_members=True)
     async def ban(self, context, member : discord.Member, *, reason=None):
+        mention = member.mention
         await member.ban(reason=reason)
-        await context.send(f"Banned {member.mention}.")
+        await context.send(self.client.database[7].format(name=mention))
 
     @commands.command()
     @commands.has_permissions(ban_members=True)
@@ -40,9 +42,10 @@ class Moderation(commands.Cog):
 
         for banned_user in banned_users:
             user = banned_user.user
+            mention = user.mention
             if (user.name, user.discriminator) == (name, discriminator):
                 await context.guild.unban(user)
-                await context.send(f"Unbanned {user.mention}.")
+                await context.send(self.client.database[8].format(name=mention))
                 return
 
     @commands.command(aliases=['verify', 'approve', 'reject'])
@@ -53,15 +56,13 @@ class Moderation(commands.Cog):
             fact = database.pending_fact
 
             if not fact:
-                await context.send(
-                    "No pending facts. Apparently I'm not very interesting."
-                )
+                await context.send(database[9])
                 return
 
             message = await context.send(
-                f"Maybe you can help me. I'm not sure about this fact:\n\n"
+                database[10] +
 
-                f"> {fact}\n\n"
+                f"\n\n> {fact}\n\n"
 
                 "React to this message with a 👍 to approve, a "
                 "👎 to reject, or a 🤷‍♂️ to abstain."
@@ -70,7 +71,7 @@ class Moderation(commands.Cog):
             await message.add_reaction('👎')
             await message.add_reaction('🤷‍♂️')
 
-            author_name = context.author.name
+            name = context.author.name
 
             def check(reaction, user):
                 correct_user = user == context.author
@@ -80,23 +81,19 @@ class Moderation(commands.Cog):
             try:
                 reaction, user = await self.client.wait_for(
                     'reaction_add',
-                    timeout=10,
+                    timeout=20,
                     check=check,
                 )
             except asyncio.TimeoutError:
-                await context.send(f'Sorry {author_name}, you were too slow.')
+                await context.send(database[11].format(name=name))
             else:
                 if reaction.emoji == '🤷‍♂️':
-                    await context.send('Another time, then...')
+                    await context.send(database[12].format(name=name))
                 elif reaction.emoji == '👍':
-                    await context.send(
-                        f'Thanks for accepting the submission, {author_name}.'
-                    )
+                    await context.send(database[13].format(name=name))
                     database.judge_fact(fact, 'accepted')
                 elif reaction.emoji == '👎':
-                    await context.send(
-                        f'The submission has been rejected.'
-                    )
+                    await context.send(database[14].format(name=name))
                     database.judge_fact(fact, 'rejected')
 
 

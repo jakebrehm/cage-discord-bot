@@ -17,15 +17,9 @@ class Contribute(commands.Cog):
             database = self.client.database
             database.submit_fact(guild_id, author_id, 'pending', submission)
             database.terminate()
-            await context.send(
-                f"Thanks for reminding me, {author_name}. "
-                f"I can't believe I forgot."
-            )
+            await context.send(database[15].format(name=author_name))
         else:
-            await context.send(
-                f"What are you trying to remind me of, {author_name}? "
-                f"I don't understand."
-            )
+            await context.send(database[16].format(name=author_name))
 
 
 def setup(client):
