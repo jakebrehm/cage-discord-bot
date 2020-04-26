@@ -24,8 +24,24 @@ class Client(commands.Bot):
         self.add_command(commands.Command(self.reload))
         self.add_command(commands.Command(self.ping))
 
+        self.roles = {}
+
     async def on_ready(self):
         print('Bot is ready.')
+        for guild in self.guilds:
+            if guild.name == 'The Cage':
+                for role in guild.roles:
+                    self.roles[role.name] = {
+                        'id': role.id,
+                        'role': discord.utils.get(guild.roles, id=role.id),
+                    }
+
+    async def on_member_join(self, member):
+        print(f'{member} has joined the server.')
+        await member.add_roles(self.roles['neutral']['role'])
+
+    async def on_member_remove(self, member):
+        print(f'{member} has left the server.')
 
     async def load(self, context, extension):
         client.load_extension(f"cogs.{extension}")
@@ -50,6 +66,8 @@ class Client(commands.Bot):
             print(error)
 
     async def on_message(self, message):
+        if message.author.bot:
+            return
         deformatted = message.content.lower().replace(' ', '')
         name, discriminator = message.author.name, message.author.discriminator
         if all(s in deformatted for s in ['who', 'nic', 'cage']):
@@ -61,6 +79,9 @@ class Client(commands.Bot):
         if all(s in deformatted for s in ['love', 'nic', 'cage']):
             reactions = ['❤', '💋', '😘']
             await message.add_reaction(random.choice(reactions))
+            await message.author.remove_roles(self.roles['neutral']['role'])
+            await message.author.remove_roles(self.roles['heathen']['role'])
+            await message.author.add_roles(self.roles['believer']['role'])
         await client.process_commands(message)
 
 
