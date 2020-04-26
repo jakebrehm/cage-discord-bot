@@ -31,6 +31,38 @@ class Database:
             """
         )
 
+        self.cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS dialogue (
+                id INTEGER PRIMARY KEY,
+                description_id INTEGER,
+                server INTEGER,
+                message TEXT
+            )
+            """
+        )
+
+        self.cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS dialogue_descriptions (
+                id INTEGER PRIMARY KEY,
+                server INTEGER,
+                description TEXT
+            )
+            """
+        )
+
+        self.cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY,
+                server INTEGER,
+                user INTEGER,
+                points INTEGER
+            )
+            """
+        )
+
     def terminate(self):
         self.connection.commit()
         self.connection.close()
@@ -91,6 +123,38 @@ class Database:
         dialogue = self.cursor.fetchall()
         self.terminate()
         return dialogue[0][0] if dialogue else None
+    
+    def add_user(self, user):
+        self.connect()
+        self.cursor.execute(
+            """
+            INSERT INTO users (server, user, points)
+            SELECT ?, ?, ?
+            WHERE NOT EXISTS (
+                SELECT *
+                FROM users
+                WHERE user=?
+            )
+            """,
+            (user.guild.id, user.id, 0, user.id),
+        )
+        self.terminate()
+
+    def get_points(self, user):
+        self.add_user(user)
+        self.connect()
+        self.cursor.execute(
+            """
+            SELECT points FROM users WHERE user=? LIMIT 1
+            """,
+            (user.id,),
+        )
+        points = self.cursor.fetchall()
+        self.terminate()
+        return points[0][0] if points else None
+
+    def add_points(self, user, points):
+        pass
 
     def __getitem__(self, value):
         return self.get_dialogue(value)

@@ -38,7 +38,11 @@ class Client(commands.Bot):
 
     async def on_member_join(self, member):
         print(f'{member} has joined the server.')
-        await member.add_roles(self.roles['neutral']['role'])
+        # self.database.add_user(member)
+        # await member.add_roles(self.roles['neutral']['role'])
+        # await member.send(f"Welcome to the server, {member.mention}.")
+        await self.assign_role(member)
+        # await member.guild.send(f"Welcome to the server, {member.mention}.")
 
     async def on_member_remove(self, member):
         print(f'{member} has left the server.')
@@ -53,11 +57,21 @@ class Client(commands.Bot):
         client.unload_extension(f"cogs.{extension}")
         client.load_extension(f"cogs.{extension}")
 
+    async def assign_role(self, user):
+        points = self.database.get_points(user)
+        if not points:
+            await user.add_roles(self.roles['neutral']['role'])
+        elif points > 0:
+            await user.add_roles(self.roles['believer']['role'])
+        elif points < 0:
+            await user.add_roles(self.roles['heathen']['role'])
+
     async def ping(self, context):
         await context.send(self.database[1].format(name=context.author.name))
 
     async def on_command_error(self, context, error):
-        name = context.message.author.name
+        # name = context.message.author.name
+        name = context.message.author.mention
         if isinstance(error, commands.CommandNotFound):
             await context.send(self.database[2].format(name=name))
         elif isinstance(error, commands.MissingPermissions):
@@ -70,12 +84,13 @@ class Client(commands.Bot):
             return
         deformatted = message.content.lower().replace(' ', '')
         name, discriminator = message.author.name, message.author.discriminator
+        mention = message.author.mention
         if all(s in deformatted for s in ['who', 'nic', 'cage']):
-            await message.channel.send(self.database[4].format(name=name))
+            await message.channel.send(self.database[4].format(name=mention))
             await asyncio.sleep(2)
             await message.author.kick(reason=f"{name} was being absurd.")
             await asyncio.sleep(1)
-            await message.channel.send(self.database[5].format(name=name))
+            await message.channel.send(self.database[5].format(name=mention))
         if all(s in deformatted for s in ['love', 'nic', 'cage']):
             reactions = ['❤', '💋', '😘']
             await message.add_reaction(random.choice(reactions))

@@ -134,5 +134,5 @@ dmypy.json
 
 # Project-specific
 *.ini
-backup.db
+*.db
 script/
