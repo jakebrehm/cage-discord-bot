@@ -154,7 +154,15 @@ class Database:
         return points[0][0] if points else None
 
     def add_points(self, user, points):
-        pass
+        self.add_user(user)
+        self.connect()
+        self.cursor.execute(
+            """
+            UPDATE users SET points = points + ? WHERE user = ?
+            """,
+            (points, user.id),
+        )
+        self.terminate()
 
     def __getitem__(self, value):
         return self.get_dialogue(value)

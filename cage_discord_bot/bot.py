@@ -59,12 +59,22 @@ class Client(commands.Bot):
 
     async def assign_role(self, user):
         points = self.database.get_points(user)
-        if not points:
+        if -5 < points < 5:
+            await user.remove_roles(self.roles['believer']['role'])
+            await user.remove_roles(self.roles['heathen']['role'])
             await user.add_roles(self.roles['neutral']['role'])
-        elif points > 0:
+        elif points >= 5:
+            await user.remove_roles(self.roles['neutral']['role'])
+            await user.remove_roles(self.roles['heathen']['role'])
             await user.add_roles(self.roles['believer']['role'])
-        elif points < 0:
+        elif points <= -5:
+            await user.remove_roles(self.roles['neutral']['role'])
+            await user.remove_roles(self.roles['believer']['role'])
             await user.add_roles(self.roles['heathen']['role'])
+
+    async def update_user(self, user, points):
+        self.database.add_points(user, points)
+        await self.assign_role(user)
 
     async def ping(self, context):
         await context.send(self.database[1].format(name=context.author.name))
@@ -96,7 +106,8 @@ class Client(commands.Bot):
             await message.add_reaction(random.choice(reactions))
             await message.author.remove_roles(self.roles['neutral']['role'])
             await message.author.remove_roles(self.roles['heathen']['role'])
-            await message.author.add_roles(self.roles['believer']['role'])
+            # await message.author.add_roles(self.roles['believer']['role'])
+            await self.update_user(message.author, 1)
         await client.process_commands(message)
 
 
