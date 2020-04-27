@@ -7,7 +7,7 @@ class Worship(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command()
+    @commands.command(brief='Find out how many points you have')
     async def points(self, context):
         database = self.client.database
         user, mention = context.author, context.author.mention

@@ -7,7 +7,9 @@ class Contribute(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.group()
+    @commands.group(
+        brief='Submit information such as a fact'
+    )
     async def submit(self, context):
         if context.invoked_subcommand is None:
             database = self.client.database

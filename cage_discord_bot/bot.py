@@ -73,7 +73,7 @@ class Client(commands.Bot):
         await self.assign_role(user)
 
     async def ping(self, context):
-        await context.send(self.database[1].format(name=context.author.name))
+        await context.send(self.database[1].format(name=context.author.mention))
 
     async def on_command_error(self, context, error):
         # name = context.message.author.name

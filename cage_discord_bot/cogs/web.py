@@ -20,7 +20,10 @@ class Web(commands.Cog):
             user_agent=self.config['reddit']['user agent'],
         )
 
-    @commands.command(aliases=['top', 'topreddit', 'top-reddit'])
+    @commands.command(
+        aliases=['top', 'top-post', 'topreddit', 'top-reddit'],
+        brief='Get a link to the current top /r/onetruegod post',
+    )
     async def toppost(self, context):
         top_posts = self.reddit.subreddit('onetruegod').hot(limit=3)
         for post in top_posts:
