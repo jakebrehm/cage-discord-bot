@@ -42,53 +42,107 @@ class Moderation(commands.Cog):
                 await context.send(self.client.database[8].format(name=mention))
                 return
 
-    @commands.command(aliases=['verify', 'approve', 'reject'])
+    # @commands.command(aliases=['verify', 'approve', 'reject'])
+    # @commands.has_permissions(administrator=True)
+    # async def judge(self, context, which):
+    #     if which == 'fact':
+    #         database = self.client.database
+    #         fact = database.pending_fact
+
+    #         if not fact:
+    #             await context.send(database[9])
+    #             return
+
+    #         message = await context.send(
+    #             database[10] +
+
+    #             f"\n\n> {fact}\n\n"
+
+    #             "React to this message with a 👍 to approve, a "
+    #             "👎 to reject, or a 🤷‍♂️ to abstain."
+    #         )
+    #         await message.add_reaction('👍')
+    #         await message.add_reaction('👎')
+    #         await message.add_reaction('🤷‍♂️')
+
+    #         name = context.author.name
+
+    #         def check(reaction, user):
+    #             correct_user = user == context.author
+    #             valid_emoji = str(reaction.emoji) in ['👍', '👎', '🤷‍♂️']
+    #             return correct_user and valid_emoji
+
+    #         try:
+    #             reaction, user = await self.client.wait_for(
+    #                 'reaction_add',
+    #                 timeout=20,
+    #                 check=check,
+    #             )
+    #         except asyncio.TimeoutError:
+    #             await context.send(database[11].format(name=name))
+    #         else:
+    #             if reaction.emoji == '🤷‍♂️':
+    #                 await context.send(database[12].format(name=name))
+    #             elif reaction.emoji == '👍':
+    #                 await context.send(database[13].format(name=name))
+    #                 database.judge_fact(fact, 'accepted')
+    #             elif reaction.emoji == '👎':
+    #                 await context.send(database[14].format(name=name))
+    #                 database.judge_fact(fact, 'rejected')
+
+    @commands.group()
     @commands.has_permissions(administrator=True)
-    async def judge(self, context, which):
-        if which == 'fact':
+    async def judge(self, context):
+        if context.invoked_subcommand is None:
             database = self.client.database
-            fact = database.pending_fact
+            mention = context.author.mention
+            await context.send(database[18].format(name=mention))
 
-            if not fact:
-                await context.send(database[9])
-                return
+    @judge.command(name='fact')
+    async def judge_fact(self, context):
+        database = self.client.database
+        fact = database.pending_fact
 
-            message = await context.send(
-                database[10] +
+        if not fact:
+            await context.send(database[9])
+            return
 
-                f"\n\n> {fact}\n\n"
+        message = await context.send(
+            database[10] +
 
-                "React to this message with a 👍 to approve, a "
-                "👎 to reject, or a 🤷‍♂️ to abstain."
+            f"\n\n> {fact}\n\n"
+
+            "React to this message with a 👍 to approve, a "
+            "👎 to reject, or a 🤷‍♂️ to abstain."
+        )
+        await message.add_reaction('👍')
+        await message.add_reaction('👎')
+        await message.add_reaction('🤷‍♂️')
+
+        mention = context.author.mention
+
+        def check(reaction, user):
+            correct_user = (user == context.author)
+            valid_emoji = str(reaction.emoji) in ['👍', '👎', '🤷‍♂️']
+            return correct_user and valid_emoji
+
+        try:
+            reaction, user = await self.client.wait_for(
+                'reaction_add',
+                timeout=60,
+                check=check,
             )
-            await message.add_reaction('👍')
-            await message.add_reaction('👎')
-            await message.add_reaction('🤷‍♂️')
-
-            name = context.author.name
-
-            def check(reaction, user):
-                correct_user = user == context.author
-                valid_emoji = str(reaction.emoji) in ['👍', '👎', '🤷‍♂️']
-                return correct_user and valid_emoji
-
-            try:
-                reaction, user = await self.client.wait_for(
-                    'reaction_add',
-                    timeout=20,
-                    check=check,
-                )
-            except asyncio.TimeoutError:
-                await context.send(database[11].format(name=name))
-            else:
-                if reaction.emoji == '🤷‍♂️':
-                    await context.send(database[12].format(name=name))
-                elif reaction.emoji == '👍':
-                    await context.send(database[13].format(name=name))
-                    database.judge_fact(fact, 'accepted')
-                elif reaction.emoji == '👎':
-                    await context.send(database[14].format(name=name))
-                    database.judge_fact(fact, 'rejected')
+        except asyncio.TimeoutError:
+            await context.send(database[11].format(name=mention))
+        else:
+            if reaction.emoji == '🤷‍♂️':
+                await context.send(database[12].format(name=mention))
+            elif reaction.emoji == '👍':
+                await context.send(database[13].format(name=mention))
+                database.judge_fact(fact, 'accepted')
+            elif reaction.emoji == '👎':
+                await context.send(database[14].format(name=mention))
+                database.judge_fact(fact, 'rejected')
 
 
 def setup(client):

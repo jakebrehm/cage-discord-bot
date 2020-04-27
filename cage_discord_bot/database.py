@@ -101,6 +101,7 @@ class Database:
             """,
             (server, date, time, author, status, fact),
         )
+        self.terminate()
         return self.connection, self.cursor
 
     def judge_fact(self, fact, status):

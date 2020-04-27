@@ -38,11 +38,7 @@ class Client(commands.Bot):
 
     async def on_member_join(self, member):
         print(f'{member} has joined the server.')
-        # self.database.add_user(member)
-        # await member.add_roles(self.roles['neutral']['role'])
-        # await member.send(f"Welcome to the server, {member.mention}.")
         await self.assign_role(member)
-        # await member.guild.send(f"Welcome to the server, {member.mention}.")
 
     async def on_member_remove(self, member):
         print(f'{member} has left the server.')
@@ -104,9 +100,6 @@ class Client(commands.Bot):
         if all(s in deformatted for s in ['love', 'nic', 'cage']):
             reactions = ['❤', '💋', '😘']
             await message.add_reaction(random.choice(reactions))
-            await message.author.remove_roles(self.roles['neutral']['role'])
-            await message.author.remove_roles(self.roles['heathen']['role'])
-            # await message.author.add_roles(self.roles['believer']['role'])
             await self.update_user(message.author, 1)
         await client.process_commands(message)
 
