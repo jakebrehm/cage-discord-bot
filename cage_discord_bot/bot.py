@@ -76,12 +76,11 @@ class Client(commands.Bot):
         await context.send(self.database[1].format(name=context.author.mention))
 
     async def on_command_error(self, context, error):
-        # name = context.message.author.name
-        name = context.message.author.mention
+        mention = context.message.author.mention
         if isinstance(error, commands.CommandNotFound):
-            await context.send(self.database[2].format(name=name))
+            await context.send(self.database[2].format(name=mention))
         elif isinstance(error, commands.MissingPermissions):
-            await context.send(self.database[3].format(name=name))
+            await context.send(self.database[3].format(name=mention))
         else:
             print(error)
 

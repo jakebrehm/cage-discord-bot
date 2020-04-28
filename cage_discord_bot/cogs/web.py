@@ -28,7 +28,21 @@ class Web(commands.Cog):
         top_posts = self.reddit.subreddit('onetruegod').hot(limit=3)
         for post in top_posts:
             if not post.stickied:
-                await context.send(f'https://www.reddit.com{post.permalink}')
+                title = post.title
+                subreddit = post.subreddit_name_prefixed
+                score = post.ups + post.downs # post.score
+                comments = post.num_comments
+                link = f'https://www.reddit.com{post.permalink}'
+
+                embed = discord.Embed(
+                    title=f'{subreddit} - {title}',
+                    author=post.author,
+                    description=f'{score} points and {comments} comments so far on Reddit',
+                    url=link,
+                )
+                embed.set_thumbnail(url=post.thumbnail)
+
+                await context.send(content=None, embed=embed)
                 return
 
 
