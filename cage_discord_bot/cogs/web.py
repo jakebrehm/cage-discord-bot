@@ -1,6 +1,4 @@
-import configparser
 import discord
-import os
 import praw
 from discord.ext import commands
 
@@ -10,14 +8,10 @@ class Web(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-        CONFIG_PATH = os.path.join('..', 'data', 'config.ini')
-        self.config = configparser.ConfigParser()
-        self.config.read(CONFIG_PATH)
-
         self.reddit = praw.Reddit(
-            client_id=self.config['reddit']['client id'],
-            client_secret=self.config['reddit']['client secret'],
-            user_agent=self.config['reddit']['user agent'],
+            client_id=self.client.config['reddit']['client id'],
+            client_secret=self.client.config['reddit']['client secret'],
+            user_agent=self.client.config['reddit']['user agent'],
         )
 
     @commands.command(

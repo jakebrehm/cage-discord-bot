@@ -2,6 +2,7 @@ import asyncio
 import configparser
 import inspect
 import os
+import pathlib
 import random
 
 import discord
@@ -10,21 +11,33 @@ from discord.ext import commands
 import database as db
 
 
-class Client(commands.Bot):
+class NicolasCage(commands.Bot):
 
-    def __init__(self, *args, database_location, **kwargs):
+    def __init__(self, *args, config, cogs, database, **kwargs):
 
         super().__init__(*args, **kwargs)
-
-        self.database_location = database_location
-        self.database = db.Database(self.database_location)
 
         self.add_command(commands.Command(self.load))
         self.add_command(commands.Command(self.unload))
         self.add_command(commands.Command(self.reload))
         self.add_command(commands.Command(self.ping))
 
+        self.database_location = database
+        self.database = db.Database(self.database_location)
+
+        self.config_location = config
+        self.config = configparser.ConfigParser()
+        self.config.read(self.config_location)
+
+        self.cogs_location = cogs
+        for filename in os.listdir(self.cogs_location):
+            if filename.endswith('.py'):
+                self.load_extension(f'cogs.{filename[:-3]}')
+
         self.roles = {}
+
+    def run(self):
+        super().run(self.config['authorization']['token'])
 
     async def on_ready(self):
         print('Bot is ready.')
@@ -43,15 +56,18 @@ class Client(commands.Bot):
     async def on_member_remove(self, member):
         print(f'{member} has left the server.')
 
+    @commands.has_permissions(administrator=True)
     async def load(self, context, extension):
-        client.load_extension(f"cogs.{extension}")
+        self.load_extension(f'cogs.{extension}')
 
+    @commands.has_permissions(administrator=True)
     async def unload(self, context, extension):
-        client.unload_extension(f"cogs.{extension}")
+        self.unload_extension(f'cogs.{extension}')
 
+    @commands.has_permissions(administrator=True)
     async def reload(self, context, extension):
-        client.unload_extension(f"cogs.{extension}")
-        client.load_extension(f"cogs.{extension}")
+        self.unload_extension(f'cogs.{extension}')
+        self.load_extension(f'cogs.{extension}')
 
     async def assign_role(self, user):
         points = self.database.get_points(user)
@@ -100,25 +116,24 @@ class Client(commands.Bot):
             reactions = ['❤', '💋', '😘']
             await message.add_reaction(random.choice(reactions))
             await self.update_user(message.author, 1)
-        await client.process_commands(message)
+        await self.process_commands(message)
 
 
 if __name__ == '__main__':
 
-    # Initialize the client
-    DATABASE_LOCATION = os.path.join('..', 'data', 'data.db')
-    client = Client(command_prefix='.', database_location=DATABASE_LOCATION)
+    # Determine relevant filepaths
+    BOT_FOLDER = pathlib.Path(__file__).resolve().parent
+    PROJECT_FOLDER = BOT_FOLDER.parent
+    DATA_FOLDER = os.path.join(PROJECT_FOLDER, 'data')
+    DATABASE_LOCATION = os.path.join(DATA_FOLDER, 'data.db')
+    CONFIG_LOCATION = os.path.join(DATA_FOLDER, 'config.ini')
+    COGS_FOLDER = os.path.join(BOT_FOLDER, 'cogs')
 
-    # Load the cogs
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-            client.load_extension(f"cogs.{filename[:-3]}")
-
-    # Read the configuration file
-    config = configparser.ConfigParser()
-    CONFIG_PATH = os.path.join('..', 'data', 'config.ini')
-    config.read(CONFIG_PATH)
-
-    # Read the token information and start the bot
-    token = config['authorization']['token']
-    client.run(token)
+    # Initialize and start the bot
+    bot = NicolasCage(
+        command_prefix='.',
+        config=CONFIG_LOCATION,
+        database=DATABASE_LOCATION,
+        cogs=COGS_FOLDER,
+    )
+    bot.run()
