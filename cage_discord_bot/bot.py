@@ -66,22 +66,18 @@ class NicolasCage(commands.Bot):
 
     @commands.has_permissions(administrator=True)
     async def reload(self, context, extension):
-        self.unload_extension(f'cogs.{extension}')
-        self.load_extension(f'cogs.{extension}')
+        self.reload_extension(f'cogs.{extension}')
 
     async def assign_role(self, user):
         points = self.database.get_points(user)
+        await user.remove_roles(self.roles['neutral']['role'])
+        await user.remove_roles(self.roles['believer']['role'])
+        await user.remove_roles(self.roles['heathen']['role'])
         if -5 < points < 5:
-            await user.remove_roles(self.roles['believer']['role'])
-            await user.remove_roles(self.roles['heathen']['role'])
             await user.add_roles(self.roles['neutral']['role'])
         elif points >= 5:
-            await user.remove_roles(self.roles['neutral']['role'])
-            await user.remove_roles(self.roles['heathen']['role'])
             await user.add_roles(self.roles['believer']['role'])
         elif points <= -5:
-            await user.remove_roles(self.roles['neutral']['role'])
-            await user.remove_roles(self.roles['believer']['role'])
             await user.add_roles(self.roles['heathen']['role'])
 
     async def update_user(self, user, points):
