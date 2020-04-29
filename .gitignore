@@ -135,4 +135,3 @@ dmypy.json
 # Project-specific
 *.ini
 *.db
-script/
