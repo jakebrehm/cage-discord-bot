@@ -21,6 +21,7 @@ class NicolasCage(commands.Bot):
         self.add_command(commands.Command(self.unload))
         self.add_command(commands.Command(self.reload))
         self.add_command(commands.Command(self.ping))
+        self.add_command(commands.Command(self.say))
 
         self.database_location = database
         self.database = db.Database(self.database_location)
@@ -86,6 +87,10 @@ class NicolasCage(commands.Bot):
 
     async def ping(self, context):
         await context.send(self.database[1].format(name=context.author.mention))
+
+    async def say(self, context, *, text):
+        await context.message.delete()
+        await context.send(text)
 
     async def on_command_error(self, context, error):
         mention = context.message.author.mention
