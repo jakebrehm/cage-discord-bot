@@ -1,3 +1,5 @@
+import os
+
 import discord
 import praw
 from discord.ext import commands
@@ -9,9 +11,9 @@ class Web(commands.Cog):
         self.client = client
 
         self.reddit = praw.Reddit(
-            client_id=self.client.config['reddit']['client id'],
-            client_secret=self.client.config['reddit']['client secret'],
-            user_agent=self.client.config['reddit']['user agent'],
+            client_id=os.environ['REDDIT_CLIENT_ID'],
+            client_secret=os.environ['REDDIT_SECRET_ID'],
+            user_agent=os.environ['REDDIT_USER_AGENT'],
         )
 
     @commands.command(

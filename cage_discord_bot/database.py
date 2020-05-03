@@ -1,21 +1,20 @@
-import psycopg2
+import os
 from datetime import datetime
+
+import psycopg2
 
 
 class Database:
 
-    def __init__(self, config):
+    def __init__(self):
 
-        self.config = config
+        pass
 
     def connect(self):
 
         self.connection = psycopg2.connect(
-            host=self.config['postgresql']['host'],
-            port=self.config['postgresql']['port'],
-            user=self.config['postgresql']['user'],
-            password=self.config['postgresql']['password'],
-            database=self.config['postgresql']['database'],
+            os.environ['DATABASE_URL'],
+            sslmode='require',
         )
 
         self.cursor = self.connection.cursor()

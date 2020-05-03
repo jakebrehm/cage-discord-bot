@@ -1,5 +1,4 @@
 import asyncio
-import configparser
 import inspect
 import os
 import pathlib
@@ -13,7 +12,7 @@ import database as db
 
 class NicolasCage(commands.Bot):
 
-    def __init__(self, *args, config, cogs, **kwargs):
+    def __init__(self, *args, cogs, **kwargs):
 
         super().__init__(*args, **kwargs)
 
@@ -23,11 +22,7 @@ class NicolasCage(commands.Bot):
         self.add_command(commands.Command(self.ping))
         self.add_command(commands.Command(self.say))
 
-        self.config_location = config
-        self.config = configparser.ConfigParser()
-        self.config.read(self.config_location)
-
-        self.database = db.Database(self.config)
+        self.database = db.Database()
 
         self.cogs_location = cogs
         for filename in os.listdir(self.cogs_location):
@@ -37,7 +32,7 @@ class NicolasCage(commands.Bot):
         self.roles = {}
 
     def run(self):
-        super().run(self.config['discord']['token'])
+        super().run(os.environ['DISCORD_TOKEN'])
 
     async def on_ready(self):
         print('Bot is ready.')
@@ -125,13 +120,11 @@ if __name__ == '__main__':
     BOT_FOLDER = pathlib.Path(__file__).resolve().parent
     PROJECT_FOLDER = BOT_FOLDER.parent
     DATA_FOLDER = os.path.join(PROJECT_FOLDER, 'data')
-    CONFIG_LOCATION = os.path.join(DATA_FOLDER, 'config.ini')
     COGS_FOLDER = os.path.join(BOT_FOLDER, 'cogs')
 
     # Initialize and start the bot
     bot = NicolasCage(
         command_prefix='.',
-        config=CONFIG_LOCATION,
         cogs=COGS_FOLDER,
     )
     bot.run()
