@@ -1,8 +1,6 @@
 import psycopg2
 from datetime import datetime
 
-from tabulate import tabulate
-
 
 class Database:
 
