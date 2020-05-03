@@ -17,6 +17,7 @@ For the greater good.
 - Add ability to be able to send a random Nicolas Cage-related meme
 - Be able to generate a Nicolas Cage meme using input from the user
 - Create a quote-of-the-day command
+- Pull information about Nicolas Cage from IMDB
 
 # Authors
 - **Jake Brehm** - *Initial Work* - [Email](mailto:mail@jakebrehm.com) | [Github](http://github.com/jakebrehm) | [LinkedIn](http://linkedin.com/in/jacobbrehm)
