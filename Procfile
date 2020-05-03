@@ -1,0 +1,1 @@
+worker: python cage_discord_bot/bot.py
