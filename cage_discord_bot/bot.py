@@ -37,7 +37,7 @@ class NicolasCage(commands.Bot):
         self.roles = {}
 
     def run(self):
-        super().run(self.config['authorization']['token'])
+        super().run(self.config['discord']['token'])
 
     async def on_ready(self):
         print('Bot is ready.')
