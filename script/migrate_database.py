@@ -32,7 +32,7 @@ lite_cursor = lite_connection.cursor()
 pg_cursor.execute(
     """
     CREATE TABLE IF NOT EXISTS "facts" (
-        "id" INTEGER PRIMARY KEY,
+        "id" SERIAL PRIMARY KEY,
         "server" BIGINT,
         "date" TEXT,
         "time" TEXT,
@@ -46,7 +46,7 @@ pg_cursor.execute(
 pg_cursor.execute(
     """
     CREATE TABLE IF NOT EXISTS "dialogue_descriptions" (
-        "id" INTEGER PRIMARY KEY,
+        "id" SERIAL PRIMARY KEY,
         "server" BIGINT,
         "description" TEXT
     )
@@ -56,7 +56,7 @@ pg_cursor.execute(
 pg_cursor.execute(
     """
     CREATE TABLE IF NOT EXISTS "dialogue" (
-        "id" INTEGER PRIMARY KEY,
+        "id" SERIAL PRIMARY KEY,
         "description_id" INTEGER,
         "server" BIGINT,
         "message" TEXT
@@ -67,7 +67,7 @@ pg_cursor.execute(
 pg_cursor.execute(
     """
     CREATE TABLE IF NOT EXISTS "users" (
-        "id" INTEGER PRIMARY KEY,
+        "id" SERIAL PRIMARY KEY,
         "server" BIGINT,
         "user" BIGINT,
         "points" BIGINT
@@ -79,57 +79,57 @@ pg_cursor.execute(
 lite_cursor.execute(
     """SELECT * FROM 'facts'"""
 )
-fact_records = lite_cursor.fetchall()
+fact_records = [record[1:] for record in lite_cursor.fetchall()]
 
 pg_cursor.executemany(
     """
     INSERT INTO "facts"
-    ("id", "server", "date", "time", "author", "status", "fact")
-    VALUES (%s, %s, %s, %s, %s, %s, %s)
+    ("server", "date", "time", "author", "status", "fact")
+    VALUES (%s, %s, %s, %s, %s, %s)
     """,
-    fact_records
+    fact_records[1:]
 )
 
 # Dialogue description table
 lite_cursor.execute(
     """SELECT * FROM 'dialogue_descriptions'"""
 )
-dialogue_description_records = lite_cursor.fetchall()
+dialogue_description_records = [record[1:] for record in lite_cursor.fetchall()]
 
 pg_cursor.executemany(
     """
-    INSERT INTO "dialogue_descriptions" ("id", "server", "description")
-    VALUES (%s, %s, %s)
+    INSERT INTO "dialogue_descriptions" ("server", "description")
+    VALUES (%s, %s)
     """,
-    dialogue_description_records
+    dialogue_description_records[1:]
 )
 
 # Dialogue table
 lite_cursor.execute(
     """SELECT * FROM 'dialogue'"""
 )
-dialogue_records = lite_cursor.fetchall()
+dialogue_records = [record[1:] for record in lite_cursor.fetchall()]
 
 pg_cursor.executemany(
     """
-    INSERT INTO "dialogue" ("id", "description_id", "server", "message")
-    VALUES (%s, %s, %s, %s)
+    INSERT INTO "dialogue" ("description_id", "server", "message")
+    VALUES (%s, %s, %s)
     """,
-    dialogue_records
+    dialogue_records[1:]
 )
 
 # Users table
 lite_cursor.execute(
     """SELECT * FROM 'users'"""
 )
-user_records = lite_cursor.fetchall()
+user_records = [record[1:] for record in lite_cursor.fetchall()]
 
 pg_cursor.executemany(
     """
-    INSERT INTO "users" ("id", "server", "user", "points")
-    VALUES (%s, %s, %s, %s)
+    INSERT INTO "users" ("server", "user", "points")
+    VALUES (%s, %s, %s)
     """,
-    user_records
+    user_records[1:]
 )
 
 # Commit to the databases

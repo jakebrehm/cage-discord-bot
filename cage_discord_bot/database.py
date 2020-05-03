@@ -1,4 +1,4 @@
-import sqlite3
+import psycopg2
 from datetime import datetime
 
 from tabulate import tabulate
@@ -6,60 +6,21 @@ from tabulate import tabulate
 
 class Database:
 
-    def __init__(self, path):
+    def __init__(self, config):
 
-        self.path = path
+        self.config = config
 
     def connect(self):
 
-        self.connection = sqlite3.connect(self.path)
+        self.connection = psycopg2.connect(
+            host=self.config['postgresql']['host'],
+            port=self.config['postgresql']['port'],
+            user=self.config['postgresql']['user'],
+            password=self.config['postgresql']['password'],
+            database=self.config['postgresql']['database'],
+        )
+
         self.cursor = self.connection.cursor()
-
-        self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS facts (
-                id INTEGER PRIMARY KEY,
-                server INTEGER,
-                date TEXT,
-                time TEXT,
-                author INTEGER,
-                status TEXT,
-                fact TEXT
-            )
-            """
-        )
-
-        self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS dialogue (
-                id INTEGER PRIMARY KEY,
-                description_id INTEGER,
-                server INTEGER,
-                message TEXT
-            )
-            """
-        )
-
-        self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS dialogue_descriptions (
-                id INTEGER PRIMARY KEY,
-                server INTEGER,
-                description TEXT
-            )
-            """
-        )
-
-        self.cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY,
-                server INTEGER,
-                user INTEGER,
-                points INTEGER
-            )
-            """
-        )
 
     def terminate(self):
         self.connection.commit()
@@ -68,7 +29,8 @@ class Database:
     def get_approved_fact(self):
         self.cursor.execute(
             """
-            SELECT fact FROM facts WHERE status="accepted"
+            SELECT "fact" FROM "facts"
+            WHERE "status"='accepted'
             ORDER BY RANDOM() LIMIT 1
             """
         )
@@ -81,8 +43,9 @@ class Database:
     def get_pending_fact(self):
         self.cursor.execute(
             """
-            SELECT fact FROM facts WHERE status="pending"
-            ORDER BY date, time LIMIT 1
+            SELECT "fact" FROM "facts"
+            WHERE "status"='pending'
+            ORDER BY "date", "time" LIMIT 1
             """
         )
         fact = self.cursor.fetchall()
@@ -94,8 +57,9 @@ class Database:
         time = datetime.utcnow().time().strftime(r'%H:%M%:%S')
         self.cursor.execute(
             """
-            INSERT INTO facts (server, date, time, author, status, fact)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO "facts"
+            ("server", "date", "time", "author", "status", "fact")
+            VALUES (%s, %s, %s, %s, %s, %s)
             """,
             (server, date, time, author, status, fact),
         )
@@ -105,7 +69,11 @@ class Database:
     def judge_fact(self, fact, status):
         self.connect()
         self.cursor.execute(
-            """UPDATE facts SET status=? WHERE fact=? AND status=?""",
+            """
+            UPDATE "facts"
+            SET "status"=%s
+            WHERE "fact"=%s AND "status"=%s
+            """,
             (status, fact, 'pending'),
         )
         self.terminate()
@@ -114,7 +82,8 @@ class Database:
         self.connect()
         self.cursor.execute(
             """
-            SELECT message FROM dialogue WHERE description_id=?
+            SELECT "message" FROM "dialogue"
+            WHERE "description_id"=%s
             ORDER BY RANDOM() LIMIT 1
             """,
             (description_id,),
@@ -127,12 +96,12 @@ class Database:
         self.connect()
         self.cursor.execute(
             """
-            INSERT INTO users (server, user, points)
-            SELECT ?, ?, ?
+            INSERT INTO "users" ("server", "user", "points")
+            SELECT %s, %s, %s
             WHERE NOT EXISTS (
                 SELECT *
-                FROM users
-                WHERE user=?
+                FROM "users"
+                WHERE "user"=%s
             )
             """,
             (user.guild.id, user.id, 0, user.id),
@@ -144,7 +113,9 @@ class Database:
         self.connect()
         self.cursor.execute(
             """
-            SELECT points FROM users WHERE user=? LIMIT 1
+            SELECT "points" FROM "users"
+            WHERE "user"=%s
+            LIMIT 1
             """,
             (user.id,),
         )
@@ -157,7 +128,9 @@ class Database:
         self.connect()
         self.cursor.execute(
             """
-            UPDATE users SET points = points + ? WHERE user = ?
+            UPDATE "users"
+            SET "points" = "points" + %s
+            WHERE "user" = %s
             """,
             (points, user.id),
         )
