@@ -132,6 +132,9 @@ dmypy.json
 .vscode/
 *.code-workspace
 
+# Asset-related
+*.psd
+
 # Project-specific
 *.ini
 *.db
