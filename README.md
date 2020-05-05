@@ -1,4 +1,9 @@
-# Nicolas Cage Discord Bot
+<p align="center">
+  <img src="https://github.com/jakebrehm/cage-discord-bot/blob/master/img/logo.png" alt="Nicolas Cage Discord Bot Logo"/>
+</p>
+
+---
+
 A Nicolas Cage-inspired bot for Discord.
 
 # What does it do?
