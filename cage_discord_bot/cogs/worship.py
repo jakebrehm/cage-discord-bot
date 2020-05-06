@@ -21,11 +21,16 @@ class Worship(commands.Cog):
     async def points(self, context, user : discord.Member = None):
         if context.invoked_subcommand is None:
             database = self.client.database
-            if user is None:
-                user = context.author
+            # if user is None:
+            #     user = context.author
+            # mention = user.mention
+            # points = database.get_points(user)
+            # await context.send(database[17].format(points=points, name=mention))
+            user = context.author if user is None else user
+            m = 17 if user is None else 19
             mention = user.mention
             points = database.get_points(user)
-            await context.send(database[17].format(points=points, name=mention))
+            await context.send(database[m].format(points=points, name=mention))
         
     @points.command(name='give')
     @commands.has_permissions(administrator=True)
