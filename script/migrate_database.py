@@ -87,7 +87,7 @@ pg_cursor.executemany(
     ("server", "date", "time", "author", "status", "fact")
     VALUES (%s, %s, %s, %s, %s, %s)
     """,
-    fact_records[1:]
+    fact_records
 )
 
 # Dialogue description table
@@ -101,7 +101,7 @@ pg_cursor.executemany(
     INSERT INTO "dialogue_descriptions" ("server", "description")
     VALUES (%s, %s)
     """,
-    dialogue_description_records[1:]
+    dialogue_description_records
 )
 
 # Dialogue table
@@ -115,7 +115,7 @@ pg_cursor.executemany(
     INSERT INTO "dialogue" ("description_id", "server", "message")
     VALUES (%s, %s, %s)
     """,
-    dialogue_records[1:]
+    dialogue_records
 )
 
 # Users table
@@ -129,8 +129,11 @@ pg_cursor.executemany(
     INSERT INTO "users" ("server", "user", "points")
     VALUES (%s, %s, %s)
     """,
-    user_records[1:]
+    user_records
 )
+
+# for record in dialogue_records:
+#     print(record)
 
 # Commit to the databases
 pg_connection.commit()
