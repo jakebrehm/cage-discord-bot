@@ -7,13 +7,6 @@ class Worship(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    # @commands.command(brief='Find out how many points you have')
-    # async def points(self, context):
-    #     database = self.client.database
-    #     user, mention = context.author, context.author.mention
-    #     points = database.get_points(user)
-    #     await context.send(database[17].format(points=points, name=mention))
-
     @commands.group(
         brief='Find out how many points you have or another user has',
         invoke_without_command=True,
@@ -21,11 +14,6 @@ class Worship(commands.Cog):
     async def points(self, context, user : discord.Member = None):
         if context.invoked_subcommand is None:
             database = self.client.database
-            # if user is None:
-            #     user = context.author
-            # mention = user.mention
-            # points = database.get_points(user)
-            # await context.send(database[17].format(points=points, name=mention))
             m = 17 if user is None else 19
             user = context.author if user is None else user
             mention = user.mention
@@ -38,7 +26,7 @@ class Worship(commands.Cog):
         database = self.client.database
         database.add_points(user, amount)
         mention = user.mention
-        await context.send(database[18].format(points=amount, name=mention))
+        await context.send(database[20].format(points=amount, name=mention))
         await self.client.assign_role(user)
 
 
