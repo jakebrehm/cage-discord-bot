@@ -26,8 +26,8 @@ class Worship(commands.Cog):
             # mention = user.mention
             # points = database.get_points(user)
             # await context.send(database[17].format(points=points, name=mention))
-            user = context.author if user is None else user
             m = 17 if user is None else 19
+            user = context.author if user is None else user
             mention = user.mention
             points = database.get_points(user)
             await context.send(database[m].format(points=points, name=mention))
