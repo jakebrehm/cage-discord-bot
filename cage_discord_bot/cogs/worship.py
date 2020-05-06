@@ -39,6 +39,7 @@ class Worship(commands.Cog):
         database.add_points(user, amount)
         mention = user.mention
         await context.send(database[18].format(points=amount, name=mention))
+        await self.client.assign_role(user)
 
 
 def setup(client):
