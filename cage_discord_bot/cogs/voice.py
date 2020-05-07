@@ -8,20 +8,20 @@ class Voice(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @client.command(
+    @commands.command(
         pass_context=True,
         brief='Have Nic join the voice channel you are currently in',
     )
-    async def join(context):
+    async def join(self, context):
         if context.message.author.voice:
             channel = context.message.author.voice.channel
             await channel.connect()
 
-    @client.command(
+    @commands.command(
         pass_context=True,
         brief='Have Nic join the voice channel you are currently in',
     )
-    async def leave(context):
+    async def leave(self, context):
         if context.message.author.voice:
             channel = context.message.author.voice.channel
             await channel.disconnect()
