@@ -22,7 +22,7 @@ For the greater good.
 
 ## How can I get in on this?
 
-I'll add a link here to talk to Nic once I get to a stable point, just hang in there.
+I'll add a link here to talk to Nic once he's at a stable point, just hang in there.
 
 ## Future plans for this project
 
