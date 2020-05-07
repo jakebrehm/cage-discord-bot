@@ -32,6 +32,7 @@ I'll add a link here to talk to Nic once he's at a stable point, just hang in th
 - Be able to generate a Nicolas Cage meme using input from the user
 - Create a quote-of-the-day command
 - Pull information about Nicolas Cage from IMDB
+- Have Nic be able to play music in a voice channel
 
 ## Authors
 - **Jake Brehm** - *Initial Work* - [Email](mailto:mail@jakebrehm.com) | [Github](http://github.com/jakebrehm) | [LinkedIn](http://linkedin.com/in/jacobbrehm)
