@@ -23,8 +23,7 @@ class Voice(commands.Cog):
     )
     async def leave(self, context):
         if context.message.author.voice:
-            guild = context.message.guild
-            voice_client = guild.voice_client
+            voice_client = context.voice_client
             await voice_client.disconnect()
 
 
