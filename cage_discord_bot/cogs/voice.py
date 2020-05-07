@@ -23,10 +23,9 @@ class Voice(commands.Cog):
     )
     async def leave(self, context):
         if context.message.author.voice:
-            channel = context.message.author.voice.channel
-            print(dir(channel))
-            # voice_client = channel.voice_client
-            # await voice_client.disconnect()
+            guild = context.message.guild
+            voice_client = guild.voice_client
+            await voice_client.disconnect()
 
 
 def setup(client):
