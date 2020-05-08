@@ -6,15 +6,17 @@ import psycopg2
 
 class Database:
 
-    def __init__(self):
+    def __init__(self, client):
 
-        pass
+        self.client = client
 
     def connect(self):
 
         self.connection = psycopg2.connect(
-            os.environ['DATABASE_URL'],
-            sslmode='require',
+            # os.environ['DATABASE_URL'],
+            # self.client.config['DATABASE_URL'],
+            # sslmode='require',
+            **self.client.config['DATABASE_URL']
         )
 
         self.cursor = self.connection.cursor()

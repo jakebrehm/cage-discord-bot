@@ -11,9 +11,12 @@ class Web(commands.Cog):
         self.client = client
 
         self.reddit = praw.Reddit(
-            client_id=os.environ['REDDIT_CLIENT_ID'],
-            client_secret=os.environ['REDDIT_SECRET_ID'],
-            user_agent=os.environ['REDDIT_USER_AGENT'],
+            # client_id=os.environ['REDDIT_CLIENT_ID'],
+            # client_secret=os.environ['REDDIT_CLIENT_SECRET'],
+            # user_agent=os.environ['REDDIT_USER_AGENT'],
+            client_id=self.client.config['REDDIT_CLIENT_ID'],
+            client_secret=self.client.config['REDDIT_CLIENT_SECRET'],
+            user_agent=self.client.config['REDDIT_USER_AGENT'],
         )
 
     @commands.command(

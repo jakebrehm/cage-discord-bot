@@ -1,4 +1,5 @@
 import asyncio
+import configparser
 import inspect
 import os
 import pathlib
@@ -12,7 +13,7 @@ import database as db
 
 class NicolasCage(commands.Bot):
 
-    def __init__(self, *args, cogs, **kwargs):
+    def __init__(self, *args, cogs, config, **kwargs):
 
         super().__init__(*args, **kwargs)
 
@@ -22,7 +23,9 @@ class NicolasCage(commands.Bot):
         self.add_command(commands.Command(self.ping))
         self.add_command(commands.Command(self.say))
 
-        self.database = db.Database()
+        self.config = Configuration(config)
+
+        self.database = db.Database(self)
 
         self.cogs_location = cogs
         for filename in os.listdir(self.cogs_location):
@@ -32,7 +35,8 @@ class NicolasCage(commands.Bot):
         self.roles = {}
 
     def run(self):
-        super().run(os.environ['DISCORD_TOKEN'])
+        # super().run(os.environ['DISCORD_TOKEN'])
+        super().run(self.config['DISCORD_TOKEN'])
 
     async def on_ready(self):
         print('Bot is ready.')
@@ -114,6 +118,30 @@ class NicolasCage(commands.Bot):
         await self.process_commands(message)
 
 
+class Configuration:
+
+    def __init__(self, config):
+        self.config = configparser.ConfigParser()
+        self.config.read(config)
+
+    def __getitem__(self, value):
+        try:
+            if value == 'DATABASE_URL':
+                return (os.environ[value],)
+            return os.environ[value]
+        except KeyError:
+            section, item = [v.replace('_', ' ').lower() for v in value.split('_', 1)]
+            if section == 'database' and item == 'url':
+                return {
+                    'host': self.config['database']['host'],
+                    'port': self.config['database']['port'],
+                    'user': self.config['database']['user'],
+                    'password': self.config['database']['password'],
+                    'database': self.config['database']['database'],
+                }
+            return self.config[section][item]
+
+
 if __name__ == '__main__':
 
     # Determine relevant filepaths
@@ -121,10 +149,12 @@ if __name__ == '__main__':
     PROJECT_FOLDER = BOT_FOLDER.parent
     DATA_FOLDER = os.path.join(PROJECT_FOLDER, 'data')
     COGS_FOLDER = os.path.join(BOT_FOLDER, 'cogs')
+    CONFIG_LOCATION = os.path.join(DATA_FOLDER, 'config.ini')
 
     # Initialize and start the bot
     bot = NicolasCage(
         command_prefix='.',
         cogs=COGS_FOLDER,
+        config=CONFIG_LOCATION,
     )
     bot.run()
