@@ -56,7 +56,7 @@ class Voice(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-        discord.opus.load_opus()
+        discord.opus.load_opus('opus')
 
     @commands.command(
         pass_context=True,
