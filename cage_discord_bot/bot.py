@@ -127,18 +127,18 @@ class Configuration:
     def __getitem__(self, value):
         try:
             if value == 'DATABASE_URL':
-                return (os.environ[value],)
+                return ((os.environ[value]), {'sslmode': 'require'})
             return os.environ[value]
         except KeyError:
             section, item = [v.replace('_', ' ').lower() for v in value.split('_', 1)]
             if section == 'database' and item == 'url':
-                return {
+                return ((), {
                     'host': self.config['database']['host'],
                     'port': self.config['database']['port'],
                     'user': self.config['database']['user'],
                     'password': self.config['database']['password'],
                     'database': self.config['database']['database'],
-                }
+                })
             return self.config[section][item]
 
 
