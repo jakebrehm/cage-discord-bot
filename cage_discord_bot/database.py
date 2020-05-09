@@ -12,14 +12,12 @@ class Database:
 
     def connect(self):
 
-        args, kwargs = self.client.config['DATABASE_URL']
-
         self.connection = psycopg2.connect(
-            # os.environ['DATABASE_URL'],
-            # self.client.config['DATABASE_URL'],
-            # sslmode='require',
-            # **self.client.config['DATABASE_URL']
-            *args, **kwargs
+            user=self.client.config['DATABASE_USER'],
+            password=self.client.config['DATABASE_PASSWORD'],
+            port=self.client.config['DATABASE_PORT'],
+            database=self.client.config['DATABASE_DATABASE'],
+            host=self.client.config['DATABASE_HOST'],
         )
 
         self.cursor = self.connection.cursor()
