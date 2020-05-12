@@ -35,7 +35,6 @@ class NicolasCage(commands.Bot):
         self.roles = {}
 
     def run(self):
-        # super().run(os.environ['DISCORD_TOKEN'])
         super().run(self.config['DISCORD_TOKEN'])
 
     async def on_ready(self):
@@ -128,8 +127,8 @@ class Configuration:
         try:
             return os.environ[value]
         except KeyError:
-            section, item = [v.replace('_', ' ').lower() for v in value.split('_', 1)]
-            return self.config[section][item]
+            section, item = [v.lower() for v in value.split('_', 1)]
+            return self.config[section][item.replace('_', ' ')]
 
 
 if __name__ == '__main__':
