@@ -45,12 +45,22 @@ def create_tables(destination_cursor, destination='sqlite3'):
     destination_cursor.execute(
         f"""
         CREATE TABLE IF NOT EXISTS "dialogue_descriptions" (
-            "id" {primary_key},
+            "id" {integer},
             "server" {integer},
             "description" TEXT
         )
         """
     )
+
+    # destination_cursor.execute(
+    #     f"""
+    #     CREATE TABLE IF NOT EXISTS "dialogue_descriptions" (
+    #         "id" {primary_key},
+    #         "server" {integer},
+    #         "description" TEXT
+    #     )
+    #     """
+    # )
 
     destination_cursor.execute(
         f"""
@@ -116,15 +126,30 @@ def copy_tables(origin_cursor, destination_cursor, destination='sqlite3'):
     origin_cursor.execute(
         f"""SELECT * FROM "dialogue_descriptions" """
     )
-    records = [record[1:] for record in origin_cursor.fetchall()]
+    records = [record for record in origin_cursor.fetchall()]
+    # records = [record[1:] for record in origin_cursor.fetchall()]
     destination_cursor.executemany(
         f"""
         INSERT INTO "dialogue_descriptions"
-        ("server", "description")
-        VALUES ({p}, {p})
+        ("id", "server", "description")
+        VALUES ({p}, {p}, {p})
         """,
         records
     )
+
+    # # Dialogue descriptions table
+    # origin_cursor.execute(
+    #     f"""SELECT * FROM "dialogue_descriptions" """
+    # )
+    # records = [record[1:] for record in origin_cursor.fetchall()]
+    # destination_cursor.executemany(
+    #     f"""
+    #     INSERT INTO "dialogue_descriptions"
+    #     ("server", "description")
+    #     VALUES ({p}, {p})
+    #     """,
+    #     records
+    # )
 
     # Facts table
     origin_cursor.execute(
@@ -146,12 +171,14 @@ if __name__ == '__main__':
     # Define origin database and destination database
     origin_database = 'postgresql'
     destination_database = 'sqlite3'
+    # origin_database = 'sqlite3'
+    # destination_database = 'postgresql'
     
     # Determine relevant filepaths
     SCRIPT_FOLDER = pathlib.Path(__file__).resolve().parent
     PROJECT_FOLDER = SCRIPT_FOLDER.parent
     DATA_FOLDER = os.path.join(PROJECT_FOLDER, 'data')
-    DATABASE_LOCATION = os.path.join(DATA_FOLDER, 'test.db')
+    DATABASE_LOCATION = os.path.join(DATA_FOLDER, 'test2.db')
     CONFIG_LOCATION = os.path.join(DATA_FOLDER, 'config.ini')
 
     # Open and read the config file
@@ -164,14 +191,28 @@ if __name__ == '__main__':
 
     # Connect to the postgres database and create a cursor
     pg_connection = psycopg2.connect(
-        host=config['postgresql']['host'],
-        port=config['postgresql']['port'],
-        user=config['postgresql']['user'],
-        password=config['postgresql']['password'],
-        database=config['postgresql']['database'],
+        host=config['database']['host'],
+        port=config['database']['port'],
+        user=config['database']['user'],
+        password=config['database']['password'],
+        database=config['database']['database'],
     )
     pg_cursor = pg_connection.cursor()
 
+    # Determine which cursors to use
+    if origin_database == 'sqlite3':
+        origin_cursor = lite_cursor
+        destination_cursor = pg_cursor
+    elif origin_database == 'postgresql':
+        origin_cursor = pg_cursor
+        destination_cursor = lite_cursor
+
+    # # Create the new database if necessary and migrate the data
+    # create_tables(destination_cursor, destination=destination_database)
+    # copy_tables(lite_cursor, destination_cursor, destination=destination_database)
+
+    # create_tables(pg_cursor, destination=destination_database)
+    # copy_tables(lite_cursor, pg_cursor, destination=destination_database)
     create_tables(lite_cursor, destination=destination_database)
     copy_tables(pg_cursor, lite_cursor, destination=destination_database)
 

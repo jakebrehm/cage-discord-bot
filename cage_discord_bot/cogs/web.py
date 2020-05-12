@@ -1,10 +1,10 @@
 import asyncio
 import os
+import re
 
+import aiohttp
 import discord
 import praw
-# import requests
-import aiohttp
 from discord.ext import commands
 
 
@@ -50,28 +50,41 @@ class Web(commands.Cog):
     )
     async def make(self, context):
         if context.invoked_subcommand is None:
-            await context.send('What do you want to make?')
+            database = self.client.database
+            mention = context.author.mention
+            await context.send(database[21].format(name=mention))
 
     @make.command(name='meme')
     async def make_meme(self, context, *, template=None):
         database = self.client.database
-
-        if template is None:
-            await context.send('What template do you want to use?')
-        
-        deformatted = context.message.content.lower().replace(' ', '')
-        if all(s in deformatted for s in ['feels', 'good']):
-            template_id = 10369075
-        else:
-            return
+        mention = context.author.mention
 
         def check(author):
             def inner_check(message):
                 return message.author == author
             return inner_check
 
-        top_query = await context.send('What do you want the top to say?')
+        if template is None:
+            await context.send(database[22].format(name=mention))
+            await context.send(
+                'The following templates are available:\n'
+                "> 1. You don't say\n"
+                "> 2. Cool breeze"
+            )
+            return
 
+        deformatted = context.message.content.lower().replace(' ', '')
+        deformatted = re.sub('[^\w\s]', '', deformatted)
+        print(deformatted)
+        if all(s in deformatted for s in ['cool', 'breeze']):
+            template_id = 10369075
+        elif all(s in deformatted for s in ['you', 'dont', 'say']):
+            template_id = 31836096
+        else:
+            await context.send(database[26].format(name=mention))
+            return
+
+        top_query = await context.send(database[23].format(name=mention))
         try:
             top_response = await self.client.wait_for(
                 'message',
@@ -84,8 +97,7 @@ class Web(commands.Cog):
         else:
             top_text = top_response.content
 
-        bottom_query = await context.send('What do you want the bottom to say?')
-
+        bottom_query = await context.send(database[24])
         try:
             bottom_response = await self.client.wait_for(
                 'message',
@@ -119,7 +131,7 @@ class Web(commands.Cog):
         if result['success']:
             await context.send(result['data']['url'])
         else:
-            await context.send('Invalid request.')
+            await context.send(database[25].format(name=mention))
 
 
 
