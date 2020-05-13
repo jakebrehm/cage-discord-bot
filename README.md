@@ -17,6 +17,8 @@
   <img src="https://img.shields.io/badge/Hosted%20on-Heroku-violet?style=for-the-badge&logo=Heroku" alt="Hosted on Heroku"></img>
   <img src="https://img.shields.io/badge/Invite%20to-Discord-violet?style=for-the-badge&logo=Discord" alt="Invite to your Discord Server"></img>
 
+  <img src="https://github.com/jakebrehm/cage-discord-bot/blob/master/img/demo.gif" alt="Nicolas Cage Discord Bot Demo"></img>
+
 </div>
 
 ## What does it do?
