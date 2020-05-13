@@ -3,20 +3,23 @@
   <img src="https://github.com/jakebrehm/cage-discord-bot/blob/master/img/logo.png" alt="Nicolas Cage Discord Bot Logo"/>
 
   <br>
+  <br>
 
-  <strong>A Nicolas Cage-inspired bot for Discord.</strong>
+  <h1>A Nicolas Cage-inspired bot for Discord.</h1>
 
   <br>
 
   <img src="https://img.shields.io/github/last-commit/jakebrehm/cage-discord-bot?style=for-the-badge&color=violet" alt="Last Commit"></img>
   <img src="https://img.shields.io/github/commit-activity/w/jakebrehm/cage-discord-bot?style=for-the-badge&color=violet" alt="Commit Activity"></img>
   <img src="https://img.shields.io/github/license/jakebrehm/cage-discord-bot?style=for-the-badge&color=violet" alt="MIT License"></img>
+  
+  <br>
+  
   <img src="https://img.shields.io/badge/Made%20With-Python%203.7-violet.svg?style=for-the-badge&logo=Python" alt="Made with Python 3.7"></img>
   <img src="https://img.shields.io/badge/Hosted%20on-Heroku-violet?style=for-the-badge&logo=Heroku" alt="Hosted on Heroku"></img>
   <img src="https://img.shields.io/badge/Invite%20to-Discord-violet?style=for-the-badge&logo=Discord" alt="Invite to your Discord Server"></img>
 
 </div>
----
 
 ## What does it do?
 
