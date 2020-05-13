@@ -17,11 +17,26 @@ class NicolasCage(commands.Bot):
 
         super().__init__(*args, **kwargs)
 
-        self.add_command(commands.Command(self.load))
-        self.add_command(commands.Command(self.unload))
-        self.add_command(commands.Command(self.reload))
-        self.add_command(commands.Command(self.ping))
-        self.add_command(commands.Command(self.say))
+        self.add_command(commands.Command(
+            self.load,
+            brief='Load an extension',
+        ))
+        self.add_command(commands.Command(
+            self.unload,
+            brief='Unload an extension',
+        ))
+        self.add_command(commands.Command(
+            self.reload,
+            brief='Reload an extension',
+        ))
+        self.add_command(commands.Command(
+            self.ping,
+            brief='Check in on Nic',
+        ))
+        self.add_command(commands.Command(
+            self.say,
+            brief='Have Nic repeat what you say',
+        ))
 
         self.config = Configuration(config)
 
@@ -102,12 +117,12 @@ class NicolasCage(commands.Bot):
         if message.author.bot:
             return
         deformatted = message.content.lower().replace(' ', '')
-        name, discriminator = message.author.name, message.author.discriminator
+        name = message.author.name
         mention = message.author.mention
         if all(s in deformatted for s in ['who', 'nic', 'cage']):
             await message.channel.send(self.database[4].format(name=mention))
             await asyncio.sleep(2)
-            await message.author.kick(reason=f"{name} was being absurd.")
+            await message.author.kick(reason=f'{name} was being absurd.')
             await asyncio.sleep(1)
             await message.channel.send(self.database[5].format(name=mention))
         if all(s in deformatted for s in ['love', 'nic', 'cage']):

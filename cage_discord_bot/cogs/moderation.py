@@ -83,7 +83,7 @@ class Moderation(commands.Cog):
             return correct_user and valid_emoji
 
         try:
-            reaction, user = await self.client.wait_for(
+            reaction, _ = await self.client.wait_for(
                 'reaction_add',
                 timeout=60,
                 check=check,

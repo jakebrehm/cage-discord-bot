@@ -74,7 +74,7 @@ class Web(commands.Cog):
             return
 
         deformatted = context.message.content.lower().replace(' ', '')
-        deformatted = re.sub('[^\w\s]', '', deformatted)
+        deformatted = re.sub(r'[^\w\s]', '', deformatted)
         print(deformatted)
         if all(s in deformatted for s in ['cool', 'breeze']):
             template_id = 10369075
