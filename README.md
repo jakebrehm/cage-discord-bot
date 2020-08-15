@@ -23,7 +23,7 @@
 
 ## What does it do?
 
-Many people have only dreamed of this moment, but **it's finally here**. True Nicolas Cage devotees can now interact with their one true god using Discord.
+Many people have only dreamed of this moment, but it's finally here. **True Nicolas Cage devotees can now interact with their one true god using Discord.**
 
 Nicolas Cage can do wonderful things such as link to the top post on [/r/onetruegod](https://www.reddit.com/r/onetruegod), spit some sweet facts about himself, and help you make memes.
 
