@@ -75,7 +75,6 @@ class Web(commands.Cog):
 
         deformatted = context.message.content.lower().replace(' ', '')
         deformatted = re.sub(r'[^\w\s]', '', deformatted)
-        print(deformatted)
         if all(s in deformatted for s in ['cool', 'breeze']):
             template_id = 10369075
         elif all(s in deformatted for s in ['you', 'dont', 'say']):
@@ -132,11 +131,6 @@ class Web(commands.Cog):
             await context.send(result['data']['url'])
         else:
             await context.send(database[25].format(name=mention))
-
-
-
-
-
 
 
 def setup(client):

@@ -131,6 +131,25 @@ class NicolasCage(commands.Bot):
             await self.update_user(message.author, 1)
         await self.process_commands(message)
 
+    async def on_raw_reaction_add(self, payload):
+        message_id = payload.message_id
+        if message_id == 866400417071104050:
+            emoji = payload.emoji.name
+            if emoji in ['🎮']:
+                user = payload.member
+                if emoji == '🎮':
+                    await user.add_roles(self.roles['gamer']['role'])
+
+    async def on_raw_reaction_remove(self, payload):
+        message_id = payload.message_id
+        if message_id == 866400417071104050:
+            emoji = payload.emoji.name
+            if emoji in ['🎮']:
+                guild = await self.fetch_guild(payload.guild_id)
+                user = await guild.fetch_member(payload.user_id)
+                if emoji == '🎮':
+                    await user.remove_roles(self.roles['gamer']['role'])
+
 
 class Configuration:
 
