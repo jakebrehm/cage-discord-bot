@@ -26,30 +26,111 @@ class Database:
         self.connection.commit()
         self.connection.close()
 
-    def get_approved_fact(self):
-        self.cursor.execute(
+    def get_fact_count(self, server, total=False):
+        self.connect()
+        if not total:
+            query = """
+                SELECT COUNT(*) FROM "facts"
+                WHERE ("status"='accepted' AND server=%s)
             """
-            SELECT "fact" FROM "facts"
-            WHERE "status"='accepted'
-            ORDER BY RANDOM() LIMIT 1
+            self.cursor.execute(
+                query,
+                (server,)
+            )
+        else:
+            query = """
+                SELECT COUNT(*) FROM "facts"
+                WHERE "status"='accepted'
             """
-        )
+            self.cursor.execute(
+                query,
+            )
+        fact = self.cursor.fetchall()
+        if fact:
+            return fact[0][0]
+        else:
+            return "I don't know much about myself, apparently."
+        self.terminate()
+
+    def get_user_count(self, server, total=False):
+        self.connect()
+        if not total:
+            self.cursor.execute(
+                """
+                SELECT COUNT(*) FROM "users"
+                WHERE server=%s
+                """,
+                (server,)
+            )
+        else:
+            self.cursor.execute(
+                """
+                SELECT COUNT(*) FROM "users"
+                """
+            )
+        fact = self.cursor.fetchall()
+        if fact:
+            return fact[0][0]
+        else:
+            return "I don't know much about myself, apparently."
+        self.terminate()
+
+    def get_approved_fact(self, server=None):
+        if server:
+            self.cursor.execute(
+                """
+                SELECT "fact" FROM "facts"
+                WHERE ("status"='accepted' AND server=%s)
+                ORDER BY RANDOM() LIMIT 1
+                """,
+                (server,)
+            )
+        else:
+            self.cursor.execute(
+                """
+                SELECT "fact" FROM "facts"
+                WHERE "status"='accepted'
+                ORDER BY RANDOM() LIMIT 1
+                """
+            )
         fact = self.cursor.fetchall()
         if fact:
             return fact[0][0]
         else:
             return "I don't know much about myself, apparently."
 
-    def get_pending_fact(self):
-        self.cursor.execute(
-            """
-            SELECT "fact" FROM "facts"
-            WHERE "status"='pending'
-            ORDER BY "date", "time" LIMIT 1
-            """
-        )
+    def get_random_fact(self, server=None):
+        self.connect()
+        fact = self.get_approved_fact(server=server)
+        self.terminate()
+        return fact
+
+    def get_pending_fact(self, server=None):
+        if server:
+            self.cursor.execute(
+                """
+                SELECT "fact" FROM "facts"
+                WHERE ("status"='pending' AND server=%s)
+                ORDER BY "date", "time" LIMIT 1
+                """,
+                (server,)
+            )    
+        else:
+            self.cursor.execute(
+                """
+                SELECT "fact" FROM "facts"
+                WHERE "status"='pending'
+                ORDER BY "date", "time" LIMIT 1
+                """
+            )
         fact = self.cursor.fetchall()
         return fact[0][0] if fact else None
+
+    def get_fact_to_judge(self, server=None):
+        self.connect()
+        fact = self.get_pending_fact(server=server)
+        self.terminate()
+        return fact
 
     def submit_fact(self, server, author, status, fact):
         self.connect()

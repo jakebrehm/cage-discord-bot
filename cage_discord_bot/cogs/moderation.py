@@ -56,8 +56,10 @@ class Moderation(commands.Cog):
 
     @judge.command(name='fact')
     async def judge_fact(self, context):
+        guild_id = context.guild.id
+
         database = self.client.database
-        fact = database.pending_fact
+        fact = database.get_fact_to_judge(guild_id)
 
         if not fact:
             await context.send(database[9])
