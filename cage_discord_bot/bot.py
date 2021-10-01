@@ -176,7 +176,7 @@ if __name__ == '__main__':
 
     # Initialize and start the bot
     bot = NicolasCage(
-        command_prefix='>',
+        command_prefix='.',
         cogs=COGS_FOLDER,
         config=CONFIG_LOCATION,
     )
