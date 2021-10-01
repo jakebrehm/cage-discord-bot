@@ -22,7 +22,10 @@ class Information(commands.Cog):
         database = self.client.database
         fact_count = database.get_fact_count(guild_id)
         fact_count_total = database.get_fact_count(guild_id, total=True)
-        await context.send(f'There are {fact_count} facts for this server, and {fact_count_total} in total.')
+        await context.send(database[28].format(
+            guild_facts=fact_count,
+            total_facts=fact_count_total,
+        ))
 
     @fact.command(name='users')
     async def user_count(self, context):
@@ -30,14 +33,17 @@ class Information(commands.Cog):
         database = self.client.database
         user_count = database.get_user_count(guild_id)
         user_count_total = database.get_user_count(guild_id, total=True)
-        await context.send(f'I am currently tracking points for {user_count} users in this server, and {user_count_total} in total.')
+        await context.send(database[29].format(
+            guild_users=user_count,
+            total_users=user_count_total,
+        ))
 
     @fact.command(name='servers')
     async def server_count(self, context):
         guild_id = context.guild.id
         database = self.client.database
         server_count = len(self.client.guilds)
-        await context.send(f'I am currently in {server_count} servers.')
+        await context.send(database[30].format(total_servers=server_count))
 
 
 def setup(client):

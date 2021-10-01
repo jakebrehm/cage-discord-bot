@@ -58,9 +58,26 @@ cursor = connection.cursor()
 
 
 # EDIT HERE - use the above functions here
-add_description(27, SERVER, "When the user prompts the react role selector")
-add_dialogue(27, SERVER, """To see certain channels, and to get certain notifications, you must have the appropriates roles.\nYou are free to choose which roles you do and do not want.```\nPlease choose your roles by reacting to this message.\n```\n🎮 for Gamer""")
+# add_description(27, SERVER, "When the user prompts the react role selector")
+# add_dialogue(27, SERVER, """To see certain channels, and to get certain notifications, you must have the appropriates roles.\nYou are free to choose which roles you do and do not want.```\nPlease choose your roles by reacting to this message.\n```\n🎮 for Gamer""")
 
+# add_description(28, SERVER, "When giving the user a fact count")
+# add_dialogue(28, SERVER, "There are {guild_facts} facts for this server, and {total_facts} in total.")
+
+# add_description(29, SERVER, "When giving the user a user count")
+# add_dialogue(29, SERVER, "I'm tracking points for {guild_users} users in this server, and {total_users} in total.")
+
+# add_description(30, SERVER, "When giving the user a server count")
+# add_dialogue(30, SERVER, "Believe it or not, I am currently in {total_servers} servers.")
+
+# add_description(1, SERVER, "When pinged")
+
+# cursor.execute(
+#         """
+#         DELETE FROM "dialogue_descriptions"
+#         WHERE "id"=28
+#         """
+#     )
 
 # Commit to the databases
 connection.commit()
