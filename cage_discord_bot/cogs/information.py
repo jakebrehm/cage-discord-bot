@@ -7,16 +7,25 @@ class Information(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.group(
-        brief='Submit information such as a fact'
+    @commands.command(
+        aliases=['funfact', 'fun-fact'],
+        brief='Get a fun fact about our lord and savior',
     )
     async def fact(self, context):
-        if context.invoked_subcommand is None:
-            guild_id = context.guild.id
-            database = self.client.database
-            await context.send(database.get_random_fact(guild_id))
+        guild_id = context.guild.id
+        database = self.client.database
+        await context.send(database.get_random_fact(guild_id))
 
-    @fact.command(name='count')
+    @commands.group(
+        brief='Get user counts, server counts, and more'
+    )
+    async def count(self, context):
+        if context.invoked_subcommand is None:
+            database = self.client.database
+            mention = context.author.mention
+            await context.send(database[31].format(name=mention))
+
+    @count.command(name='facts')
     async def fact_count(self, context):
         guild_id = context.guild.id
         database = self.client.database
@@ -27,7 +36,7 @@ class Information(commands.Cog):
             total_facts=fact_count_total,
         ))
 
-    @fact.command(name='users')
+    @count.command(name='users')
     async def user_count(self, context):
         guild_id = context.guild.id
         database = self.client.database
@@ -38,7 +47,7 @@ class Information(commands.Cog):
             total_users=user_count_total,
         ))
 
-    @fact.command(name='servers')
+    @count.command(name='servers')
     async def server_count(self, context):
         guild_id = context.guild.id
         database = self.client.database

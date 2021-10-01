@@ -70,6 +70,9 @@ cursor = connection.cursor()
 # add_description(30, SERVER, "When giving the user a server count")
 # add_dialogue(30, SERVER, "Believe it or not, I am currently in {total_servers} servers.")
 
+# add_description(31, SERVER, "When the user uses the count command with an unknown subcommand")
+# add_dialogue(31, SERVER, "What do you want me to count up, {name}?")
+
 # add_description(1, SERVER, "When pinged")
 
 # cursor.execute(
