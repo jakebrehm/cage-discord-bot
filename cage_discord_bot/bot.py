@@ -86,12 +86,14 @@ class NicolasCage(commands.Bot):
         await user.remove_roles(self.roles['neutral']['role'])
         await user.remove_roles(self.roles['believer']['role'])
         await user.remove_roles(self.roles['heathen']['role'])
-        if -5 < points < 5:
+        if not points:
+            await user.add_roles(self.roles['neutral']['role'])
+        elif points <= -5:
+            await user.add_roles(self.roles['heathen']['role'])
+        elif -5 < points < 5:
             await user.add_roles(self.roles['neutral']['role'])
         elif points >= 5:
             await user.add_roles(self.roles['believer']['role'])
-        elif points <= -5:
-            await user.add_roles(self.roles['heathen']['role'])
 
     async def update_user(self, user, points):
         self.database.add_points(user, points)
