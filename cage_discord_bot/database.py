@@ -49,7 +49,7 @@ class Database:
         if fact:
             return fact[0][0]
         else:
-            return "I don't know much about myself, apparently."
+            return "I don't know the answer to that, apparently."
         self.terminate()
 
     def get_user_count(self, server, total=False):
@@ -72,7 +72,7 @@ class Database:
         if fact:
             return fact[0][0]
         else:
-            return "I don't know much about myself, apparently."
+            return "I don't know the answer to that, apparently."
         self.terminate()
 
     def get_approved_fact(self, server=None):
