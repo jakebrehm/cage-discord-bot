@@ -136,6 +136,7 @@ dmypy.json
 *.psd
 
 # Project-specific
+data/csv_backups/
 script/archive/
 *.ini
 *.db

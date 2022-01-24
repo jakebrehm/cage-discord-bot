@@ -83,17 +83,17 @@ class NicolasCage(commands.Bot):
 
     async def assign_role(self, user):
         points = self.database.get_points(user)
-        await user.remove_roles(self.roles['neutral']['role'])
-        await user.remove_roles(self.roles['believer']['role'])
-        await user.remove_roles(self.roles['heathen']['role'])
+        await user.remove_roles(self.roles['Neutral']['role'])
+        await user.remove_roles(self.roles['Believer']['role'])
+        await user.remove_roles(self.roles['Heathen']['role'])
         if not points:
-            await user.add_roles(self.roles['neutral']['role'])
+            await user.add_roles(self.roles['Neutral']['role'])
         elif points <= -5:
-            await user.add_roles(self.roles['heathen']['role'])
+            await user.add_roles(self.roles['Heathen']['role'])
         elif -5 < points < 5:
-            await user.add_roles(self.roles['neutral']['role'])
+            await user.add_roles(self.roles['Neutral']['role'])
         elif points >= 5:
-            await user.add_roles(self.roles['believer']['role'])
+            await user.add_roles(self.roles['Believer']['role'])
 
     async def update_user(self, user, points):
         self.database.add_points(user, points)
@@ -140,7 +140,28 @@ class NicolasCage(commands.Bot):
             if emoji in ['🎮']:
                 user = payload.member
                 if emoji == '🎮':
-                    await user.add_roles(self.roles['gamer']['role'])
+                    await user.add_roles(self.roles['Gamer']['role'])
+        elif message_id == 934996394350084136:
+            emoji = payload.emoji.name
+            if emoji in [
+                'runescape',
+                'amongus',
+                'callofduty',
+                'back4blood',
+                'residentevil',
+            ]:
+                user = payload.member
+                if emoji == 'runescape':
+                    await user.add_roles(self.roles['RuneScape']['role'])
+                elif emoji == 'amongus':
+                    await user.add_roles(self.roles['Among Us']['role'])
+                elif emoji == 'callofduty':
+                    await user.add_roles(self.roles['Call of Duty']['role'])
+                elif emoji == 'back4blood':
+                    await user.add_roles(self.roles['Back 4 Blood']['role'])
+                elif emoji == 'residentevil':
+                    await user.add_roles(self.roles['Resident Evil']['role'])
+            
 
     async def on_raw_reaction_remove(self, payload):
         message_id = payload.message_id
@@ -150,7 +171,29 @@ class NicolasCage(commands.Bot):
                 guild = await self.fetch_guild(payload.guild_id)
                 user = await guild.fetch_member(payload.user_id)
                 if emoji == '🎮':
-                    await user.remove_roles(self.roles['gamer']['role'])
+                    await user.remove_roles(self.roles['Gamer']['role'])
+        elif message_id == 934996394350084136:
+            emoji = payload.emoji.name
+            if emoji in [
+                'runescape',
+                'amongus',
+                'callofduty',
+                'back4blood',
+                'residentevil',
+            ]:
+                guild = await self.fetch_guild(payload.guild_id)
+                user = await guild.fetch_member(payload.user_id)
+                if emoji == 'runescape':
+                    await user.remove_roles(self.roles['RuneScape']['role'])
+                elif emoji == 'amongus':
+                    await user.remove_roles(self.roles['Among Us']['role'])
+                elif emoji == 'callofduty':
+                    await user.remove_roles(self.roles['Call of Duty']['role'])
+                elif emoji == 'back4blood':
+                    await user.remove_roles(self.roles['Back 4 Blood']['role'])
+                elif emoji == 'residentevil':
+                    await user.remove_roles(self.roles['Resident Evil']['role'])
+
 
 
 class Configuration:

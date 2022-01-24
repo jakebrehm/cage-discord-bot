@@ -9,27 +9,6 @@ import sqlite3
 
 import psycopg2
 
-SERVER = 701467145342812240
-
-def add_description(dialogue_id, SERVER, description):
-    cursor.execute(
-        """
-        INSERT INTO "dialogue_descriptions" ("id", "server", "description")
-        VALUES (%s, %s, %s)
-        """,
-        (dialogue_id, SERVER, description)
-    )
-
-def add_dialogue(dialogue_id, SERVER, message):
-    cursor.execute(
-        """
-        INSERT INTO "dialogue" ("description_id", "server", "message")
-        VALUES (%s, %s, %s)
-        """,
-        (dialogue_id, SERVER, message)
-    )
-
-
 # Determine relevant filepaths
 SCRIPT_FOLDER = pathlib.Path(__file__).resolve().parent
 PROJECT_FOLDER = SCRIPT_FOLDER.parent
@@ -54,8 +33,27 @@ connection = psycopg2.connect(
     password=config['database']['password'],
     database=config['database']['database'],
 )
+SERVER = config['discord']['server']
 cursor = connection.cursor()
 
+# Functions to add records to database
+def add_description(dialogue_id, SERVER, description):
+    cursor.execute(
+        """
+        INSERT INTO "dialogue_descriptions" ("id", "server", "description")
+        VALUES (%s, %s, %s)
+        """,
+        (dialogue_id, SERVER, description)
+    )
+
+def add_dialogue(dialogue_id, SERVER, message):
+    cursor.execute(
+        """
+        INSERT INTO "dialogue" ("description_id", "server", "message")
+        VALUES (%s, %s, %s)
+        """,
+        (dialogue_id, SERVER, message)
+    )
 
 # EDIT HERE - use the above functions here
 # add_description(27, SERVER, "When the user prompts the react role selector")
@@ -82,8 +80,24 @@ cursor = connection.cursor()
 #         """
 #     )
 
-# Commit to the databases
-connection.commit()
+# description = "When the user prompts the game-specific react role selector"
+# message = """If you chose the 🎮 Gamer role, you must also choose game-specific roles to see their channels.
+
+# ```
+# Please choose roles for specific games by reacting to this message.
+# ```
+# <:runescape:934989869938274334> for RuneScape
+# <:amongus:934989768406749244> for Among Us
+# <:callofduty:934989843279261726> for Call of Duty
+# <:back4blood:934989791961952256> for Back 4 Blood
+# <:residentevil:934990033771978792> for Resident Evil
+# """
+# dialogue_id = 32
+# add_description(dialogue_id, SERVER, description)
+# add_dialogue(dialogue_id, SERVER, message)
+
+# # Commit to the databases
+# connection.commit()
 
 # Close out cursors and databases
 connection.close()
