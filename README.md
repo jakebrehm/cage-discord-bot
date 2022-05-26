@@ -42,10 +42,9 @@ Some things I'd like to add to this project in the future, from highest to lowes
 - Add comments and documentation
 - Add some screenshots and GIFs to this readme
 - Implement a more fleshed out points/level system
-- Add a *Deploy to Heroku* button to this readme
 - Pull information about Nicolas Cage from IMDB
-- Create a quote-of-the-day command
-- Have Nic be able to play music in a voice channel 
+- Create a quote command
+- Have Nic be able to play music in a voice channel
 
 ## Authors
 - **Jake Brehm** - *Initial Work* - [Email](mailto:mail@jakebrehm.com) | [Github](http://github.com/jakebrehm) | [LinkedIn](http://linkedin.com/in/jacobbrehm)
