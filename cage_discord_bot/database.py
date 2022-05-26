@@ -135,7 +135,7 @@ class Database:
     def submit_fact(self, server, author, status, fact):
         self.connect()
         date = datetime.utcnow().date().strftime(r'%Y-%m-%d')
-        time = datetime.utcnow().time().strftime(r'%H:%M%:%S')
+        time = datetime.utcnow().time().strftime(r'%H:%M:%S')
         self.cursor.execute(
             """
             INSERT INTO "facts"
