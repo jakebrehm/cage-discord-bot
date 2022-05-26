@@ -80,7 +80,7 @@ class Database:
             self.cursor.execute(
                 """
                 SELECT "fact" FROM "facts"
-                WHERE ("status"='accepted' AND server=%s)
+                WHERE ("status"='accepted' AND (server=%s OR "universal"='true'))
                 ORDER BY RANDOM() LIMIT 1
                 """,
                 (server,)
@@ -89,7 +89,7 @@ class Database:
             self.cursor.execute(
                 """
                 SELECT "fact" FROM "facts"
-                WHERE "status"='accepted'
+                WHERE "status"='accepted' AND "universal"='true'
                 ORDER BY RANDOM() LIMIT 1
                 """
             )
@@ -110,16 +110,16 @@ class Database:
             self.cursor.execute(
                 """
                 SELECT "fact" FROM "facts"
-                WHERE ("status"='pending' AND server=%s)
+                WHERE ("status"='pending' AND ("server"=%s OR "universal"='true'))
                 ORDER BY "date", "time" LIMIT 1
                 """,
                 (server,)
-            )    
+            )
         else:
             self.cursor.execute(
                 """
                 SELECT "fact" FROM "facts"
-                WHERE "status"='pending'
+                WHERE "status"='pending' AND "universal"='true'
                 ORDER BY "date", "time" LIMIT 1
                 """
             )
@@ -139,10 +139,10 @@ class Database:
         self.cursor.execute(
             """
             INSERT INTO "facts"
-            ("server", "date", "time", "author", "status", "fact")
-            VALUES (%s, %s, %s, %s, %s, %s)
+            ("server", "date", "time", "author", "status", "fact", "universal")
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             """,
-            (server, date, time, author, status, fact),
+            (server, date, time, author, status, fact, False),
         )
         self.terminate()
         return self.connection, self.cursor
