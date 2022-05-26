@@ -48,3 +48,4 @@ Some things I'd like to add to this project in the future, from highest to lowes
 
 ## Authors
 - **Jake Brehm** - *Initial Work* - [Email](mailto:mail@jakebrehm.com) | [Github](http://github.com/jakebrehm) | [LinkedIn](http://linkedin.com/in/jacobbrehm)
+- **semtexolle** - *Volunteer Fact Gatherer*
