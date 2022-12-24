@@ -55,5 +55,5 @@ class Information(commands.Cog):
         await context.send(database[30].format(total_servers=server_count))
 
 
-def setup(client):
-    client.add_cog(Information(client))
+async def setup(client):
+    await client.add_cog(Information(client))

@@ -103,5 +103,5 @@ class Moderation(commands.Cog):
                 database.judge_fact(fact, 'rejected')
 
 
-def setup(client):
-    client.add_cog(Moderation(client))
+async def setup(client):
+    await client.add_cog(Moderation(client))

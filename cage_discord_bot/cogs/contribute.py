@@ -26,5 +26,5 @@ class Contribute(commands.Cog):
         await context.send(database[15].format(name=mention))
 
 
-def setup(client):
-    client.add_cog(Contribute(client))
+async def setup(client):
+    await client.add_cog(Contribute(client))

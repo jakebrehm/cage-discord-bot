@@ -133,5 +133,5 @@ class Web(commands.Cog):
             await context.send(database[25].format(name=mention))
 
 
-def setup(client):
-    client.add_cog(Web(client))
+async def setup(client):
+    await client.add_cog(Web(client))

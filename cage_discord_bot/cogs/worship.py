@@ -30,5 +30,5 @@ class Worship(commands.Cog):
         await self.client.assign_role(user)
 
 
-def setup(client):
-    client.add_cog(Worship(client))
+async def setup(client):
+    await client.add_cog(Worship(client))

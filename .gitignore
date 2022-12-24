@@ -140,3 +140,4 @@ data/csv_backups/
 script/archive/
 *.ini
 *.db
+!config_blank.ini

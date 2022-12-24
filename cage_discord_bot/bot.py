@@ -6,6 +6,7 @@ import pathlib
 import random
 
 import discord
+from discord import app_commands
 from discord.ext import commands
 
 import database as db
@@ -29,28 +30,30 @@ class NicolasCage(commands.Bot):
             self.reload,
             brief='Reload an extension',
         ))
-        self.add_command(commands.Command(
-            self.ping,
-            brief='Check in on Nic',
-        ))
-        self.add_command(commands.Command(
-            self.say,
-            brief='Have Nic repeat what you say',
-        ))
 
         self.config = Configuration(config)
 
         self.database = db.Database(self)
 
         self.cogs_location = cogs
+
+        self.initial_extensions = []
         for filename in os.listdir(self.cogs_location):
             if filename.endswith('.py'):
-                self.load_extension(f'cogs.{filename[:-3]}')
+                self.initial_extensions.append(f'cogs.{filename[:-3]}')
 
         self.roles = {}
 
     def run(self):
         super().run(self.config['DISCORD_TOKEN'])
+
+    async def setup_hook(self):
+        try:
+            for extension in self.initial_extensions:
+                await self.load_extension(extension)
+                print(f'Loaded: {extension}')
+        except Exception as e:
+            print(e)
 
     async def on_ready(self):
         print('Bot is ready.')
@@ -70,25 +73,18 @@ class NicolasCage(commands.Bot):
 
     @commands.has_permissions(administrator=True)
     async def load(self, context, extension):
-        self.load_extension(f'cogs.{extension}')
+        await self.load_extension(f'cogs.{extension}')
 
     @commands.has_permissions(administrator=True)
     async def unload(self, context, extension):
-        self.unload_extension(f'cogs.{extension}')
+        await self.unload_extension(f'cogs.{extension}')
 
     @commands.has_permissions(administrator=True)
     async def reload(self, context, extension):
-        self.reload_extension(f'cogs.{extension}')
+        await self.reload_extension(f'cogs.{extension}')
 
     async def update_user(self, user, points):
         self.database.add_points(user, points)
-
-    async def ping(self, context):
-        await context.send(self.database[1].format(name=context.author.mention))
-
-    async def say(self, context, *, text):
-        await context.message.delete()
-        await context.send(text)
 
     async def on_command_error(self, context, error):
         mention = context.message.author.mention
@@ -152,5 +148,6 @@ if __name__ == '__main__':
         command_prefix='.',
         cogs=COGS_FOLDER,
         config=CONFIG_LOCATION,
+        intents=discord.Intents().all(),
     )
     bot.run()
