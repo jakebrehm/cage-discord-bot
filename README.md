@@ -13,9 +13,9 @@
   <img src="https://img.shields.io/github/commit-activity/w/jakebrehm/cage-discord-bot?style=for-the-badge&color=violet" alt="Commit Activity"></img>
   <img src="https://img.shields.io/github/license/jakebrehm/cage-discord-bot?style=for-the-badge&color=violet" alt="MIT License"></img>
   <br>
-  <img src="https://img.shields.io/badge/Made%20With-Python%203.7-violet.svg?style=for-the-badge&logo=Python" alt="Made with Python 3.7"></img>
-  <img src="https://img.shields.io/badge/Hosted%20on-Heroku-violet?style=for-the-badge&logo=Heroku" alt="Hosted on Heroku"></img>
-  <img src="https://img.shields.io/badge/Invite%20to-Discord-violet?style=for-the-badge&logo=Discord" alt="Invite to your Discord Server"></img>
+  <img src="https://img.shields.io/badge/Made%20With-Python%20-violet.svg?style=for-the-badge&logo=Python&logoColor=white" alt="Made with Python"></img>
+  <img src="https://img.shields.io/badge/Hosted%20on-Railway-violet?style=for-the-badge&logo=Railway&logoColor=white" alt="Hosted on Railway"></img>
+  <img src="https://img.shields.io/badge/Invite%20to-Discord-violet?style=for-the-badge&logo=Discord&logoColor=white" alt="Invite to your Discord Server"></img>
 
   <img src="https://github.com/jakebrehm/cage-discord-bot/blob/master/img/demo.gif" alt="Nicolas Cage Discord Bot Demo"></img>
 
