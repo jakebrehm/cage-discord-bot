@@ -15,7 +15,7 @@ prawcore==1.4.0
 psycopg2-binary==2.9.5
 pycparser==2.20
 PyNaCl==1.4.0
-requests==2.28.1
+requests==2.31.0
 six==1.15.0
 typing-extensions==3.7.4.2
 update-checker==0.17
